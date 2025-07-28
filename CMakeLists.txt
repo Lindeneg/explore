@@ -90,6 +90,13 @@ add_executable(ExploreApp
         src/managers/game_manager.cpp
 )
 
+add_custom_command(TARGET ExploreApp POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:ExploreApp>/assets
+        COMMENT "Copying assets to output folder"
+)
+
 target_include_directories(ExploreApp PRIVATE ${LUA_INCLUDE_DIR})
 target_include_directories(ExploreApp PRIVATE ${SOL2_INCLUDE_DIRS})
 
