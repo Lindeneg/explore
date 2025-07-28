@@ -15,11 +15,11 @@ void set_draw_color(Color color);
 
 void draw_texture(SDL_Texture *texture, const SDL_Rect *dst);
 
-void draw_texture(SDL_Texture *texture, int x_dst, int y_dst, int w_dst,
-                  int h_dst);
+void draw_texture(SDL_Texture *texture, i32 x_dst, i32 y_dst, i32 w_dst,
+                  i32 h_dst);
 
-void draw_texture(SDL_Texture *texture, int x_src, int y_src, int w_src,
-                  int h_src, int x_dst, int y_dst, int w_dst, int h_dst);
+void draw_texture(SDL_Texture *texture, i32 x_src, i32 y_src, i32 w_src,
+                  i32 h_src, i32 x_dst, i32 y_dst, i32 w_dst, i32 h_dst);
 
 void draw_texture(SDL_Texture *texture, const SDL_Rect *src,
                   const SDL_Rect *dst);

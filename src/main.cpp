@@ -1,8 +1,9 @@
 #include <spdlog/spdlog.h>
 
+#include "common.h"
 #include "managers/game_manager.h"
 
-int main(int, char**) {
+i32 main() {
     spdlog::set_level(spdlog::level::trace);
     if (!explore::managers::game::initialize()) {
         return EXIT_FAILURE;
