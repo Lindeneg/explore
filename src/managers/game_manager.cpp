@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_image.h>
 
 #include "screen_manager.h"
 #include "../common.h"
@@ -54,6 +55,7 @@ void explore::managers::game::load_level(const int level) {
 
 void explore::managers::game::run() {
     setup();
+    // ReSharper disable once CppDFALoopConditionNotUpdated
     while (is_running) {
         process_input();
         update();
@@ -87,7 +89,12 @@ void explore::managers::game::update() {
 }
 
 void explore::managers::game::render() {
+    screen::set_draw_color(color::black);
     screen::clear();
+
+    SDL_Surface *surface{IMG_Load("assets/images/tank-tiger-right.png")};
+    assert(surface);
+
     screen::present();
 }
 
