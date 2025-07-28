@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(ExploreApp LANGUAGES C CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS true)
+
 if (NOT DEFINED VCPKG_TARGET_TRIPLET)
     if (MSVC)
         set(VCPKG_TARGET_TRIPLET "x64-windows"
@@ -96,6 +98,11 @@ add_custom_command(TARGET ExploreApp POST_BUILD
         $<TARGET_FILE_DIR:ExploreApp>/assets
         COMMENT "Copying assets to output folder"
 )
+
+add_custom_command(TARGET ExploreApp POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
+        "${CMAKE_SOURCE_DIR}/")
 
 target_include_directories(ExploreApp PRIVATE ${LUA_INCLUDE_DIR})
 target_include_directories(ExploreApp PRIVATE ${SOL2_INCLUDE_DIRS})

@@ -1,2 +1,5 @@
 .idea
 cmake-build-*
+misc
+.cache
+compile_commands.json
