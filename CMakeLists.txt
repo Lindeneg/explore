@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(MyApp LANGUAGES C CXX)
+project(ExploreApp LANGUAGES C CXX)
 
 if (NOT DEFINED VCPKG_TARGET_TRIPLET)
     if (MSVC)
@@ -82,13 +82,18 @@ find_package(Lua REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(sol2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
-add_executable(app src/main.cpp)
+add_executable(ExploreApp
+        src/main.cpp
+        src/managers/screen_manager.cpp
+        src/managers/game_manager.cpp
+)
 
-target_include_directories(app PRIVATE ${LUA_INCLUDE_DIR})
-target_include_directories(app PRIVATE ${SOL2_INCLUDE_DIRS})
+target_include_directories(ExploreApp PRIVATE ${LUA_INCLUDE_DIR})
+target_include_directories(ExploreApp PRIVATE ${SOL2_INCLUDE_DIRS})
 
-target_link_libraries(app PRIVATE
+target_link_libraries(ExploreApp PRIVATE
         SDL2::SDL2
         SDL2::SDL2main
 
@@ -107,4 +112,5 @@ target_link_libraries(app PRIVATE
         ${LUA_LIBRARIES}
         glm::glm
         imgui::imgui
+        spdlog::spdlog
 )

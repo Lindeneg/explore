@@ -9,6 +9,7 @@
     "lua",
     "glm",
     "sol2",
-    "imgui"
+    "imgui",
+    "spdlog"
   ]
 }
