@@ -9,32 +9,32 @@
 #include "../common.h"
 
 namespace explore::managers::screen {
-    bool initialize();
+bool initialize();
 
-    void set_draw_color(Color color);
+void set_draw_color(Color color);
 
-    void draw_texture(SDL_Texture *texture, const SDL_Rect *dst);
+void draw_texture(SDL_Texture *texture, const SDL_Rect *dst);
 
-    void draw_texture(SDL_Texture *texture, int x_dst, int y_dst, int w_dst, int h_dst);
+void draw_texture(SDL_Texture *texture, int x_dst, int y_dst, int w_dst,
+                  int h_dst);
 
-    void draw_texture(SDL_Texture *texture, int x_src, int y_src, int w_src,
-                      int h_src, int x_dst,
-                      int y_dst, int w_dst,
-                      int h_dst);
+void draw_texture(SDL_Texture *texture, int x_src, int y_src, int w_src,
+                  int h_src, int x_dst, int y_dst, int w_dst, int h_dst);
 
-    void draw_texture(SDL_Texture *texture, const SDL_Rect *src, const SDL_Rect *dst);
+void draw_texture(SDL_Texture *texture, const SDL_Rect *src,
+                  const SDL_Rect *dst);
 
-    void clear();
+void clear();
 
-    void present();
+void present();
 
-    glm::ivec2 get_dimensions();
+glm::ivec2 get_dimensions();
 
-    SDL_Window *get_window();
+SDL_Window *get_window();
 
-    SDL_Renderer *get_renderer();
+SDL_Renderer *get_renderer();
 
-    void destroy();
-} // namespace explore::managers::screen
+void destroy();
+}  // namespace explore::managers::screen
 
-#endif //SCREEN_MANAGER_H
+#endif  // SCREEN_MANAGER_H

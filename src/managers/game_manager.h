@@ -2,23 +2,23 @@
 #define GAME_MANAGER_H
 
 namespace explore::managers::game {
-    bool initialize();
+bool initialize();
 
-    void set_cap_frame_rate(bool state);
+void set_cap_frame_rate(bool state);
 
-    void setup();
+void setup();
 
-    void load_level(int level);
+void load_level(int level);
 
-    void run();
+void run();
 
-    void process_input();
+void process_input();
 
-    void update();
+void update();
 
-    void render();
+void render();
 
-    void destroy();
-} // namespace explore::managers::game
+void destroy();
+}  // namespace explore::managers::game
 
-#endif //GAME_MANAGER_H
+#endif  // GAME_MANAGER_H

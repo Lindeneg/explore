@@ -1,11 +1,11 @@
 #include "game_manager.h"
 
 #include <SDL2/SDL_events.h>
-#include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_timer.h>
 
-#include "screen_manager.h"
 #include "../common.h"
+#include "screen_manager.h"
 
 static bool is_running{false};
 static bool do_cap_frame_rate{false};
@@ -29,12 +29,12 @@ static void calculate_delta_time() {
     }
     // calculate delta time
     const float delta_time =
-            (static_cast<float>(SDL_GetTicks()) - previous_frame_time) / 1000.f;
+        (static_cast<float>(SDL_GetTicks()) - previous_frame_time) / 1000.f;
     // clamp value (if running in debugger dt will be messed up)
     game_context.delta_time =
-            explore::utils::greater(delta_time, explore::constants::MAXIMUM_DT)
-                ? explore::constants::MAXIMUM_DT
-                : delta_time;
+        explore::utils::greater(delta_time, explore::constants::MAXIMUM_DT)
+            ? explore::constants::MAXIMUM_DT
+            : delta_time;
     // update previous frame time
     previous_frame_time = static_cast<float>(SDL_GetTicks());
 }
@@ -47,11 +47,9 @@ bool explore::managers::game::initialize() {
     return true;
 }
 
-void explore::managers::game::setup() {
-}
+void explore::managers::game::setup() {}
 
-void explore::managers::game::load_level(const int level) {
-}
+void explore::managers::game::load_level(const int level) {}
 
 void explore::managers::game::run() {
     setup();
@@ -72,7 +70,7 @@ void explore::managers::game::process_input() {
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_d) {
                     game_context.draw_collision_rects =
-                            !game_context.draw_collision_rects;
+                        !game_context.draw_collision_rects;
                 }
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     is_running = false;
@@ -84,9 +82,7 @@ void explore::managers::game::process_input() {
     }
 }
 
-void explore::managers::game::update() {
-    calculate_delta_time();
-}
+void explore::managers::game::update() { calculate_delta_time(); }
 
 void explore::managers::game::render() {
     screen::set_draw_color(color::black);
@@ -94,7 +90,8 @@ void explore::managers::game::render() {
 
     SDL_Surface *surface{IMG_Load("assets/images/tank-tiger-right.png")};
     assert(surface);
-    SDL_Texture *texture{SDL_CreateTextureFromSurface(screen::get_renderer(), surface)};
+    SDL_Texture *texture{
+        SDL_CreateTextureFromSurface(screen::get_renderer(), surface)};
     SDL_FreeSurface(surface);
 
     screen::draw_texture(texture, 10, 10, 32, 32);
@@ -105,6 +102,6 @@ void explore::managers::game::render() {
 }
 
 void explore::managers::game::destroy() {
-    //asset::destroy();
+    // asset::destroy();
     screen::destroy();
 }
