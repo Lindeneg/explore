@@ -94,6 +94,12 @@ void explore::managers::game::render() {
 
     SDL_Surface *surface{IMG_Load("assets/images/tank-tiger-right.png")};
     assert(surface);
+    SDL_Texture *texture{SDL_CreateTextureFromSurface(screen::get_renderer(), surface)};
+    SDL_FreeSurface(surface);
+
+    screen::draw_texture(texture, 10, 10, 32, 32);
+
+    SDL_DestroyTexture(texture);
 
     screen::present();
 }
