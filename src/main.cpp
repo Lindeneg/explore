@@ -3,12 +3,14 @@
 #include "common.h"
 #include "managers/game_manager.h"
 
+using namespace explore;
+
 i32 main() {
     spdlog::set_level(spdlog::level::trace);
-    if (!explore::managers::game::initialize()) {
+    if (!managers::game::initialize()) {
         return EXIT_FAILURE;
     }
-    explore::managers::game::run();
-    explore::managers::game::destroy();
+    managers::game::run();
+    managers::game::destroy();
     return EXIT_SUCCESS;
 }

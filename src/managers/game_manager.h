@@ -1,5 +1,5 @@
-#ifndef GAME_MANAGER_H
-#define GAME_MANAGER_H
+#ifndef EXPLORE_MANAGERS_GAME_MANAGER_H
+#define EXPLORE_MANAGERS_GAME_MANAGER_H
 
 #include "../common.h"
 
@@ -23,4 +23,4 @@ void render();
 void destroy();
 }  // namespace explore::managers::game
 
-#endif  // GAME_MANAGER_H
+#endif  // EXPLORE_MANAGERS_GAME_MANAGER_H

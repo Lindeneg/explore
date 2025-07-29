@@ -1,5 +1,5 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef EXPLORE_COMMON_H
+#define EXPLORE_COMMON_H
 
 #include <SDL2/SDL_pixels.h>
 
@@ -154,4 +154,4 @@ const Color dark_red{139, 0, 0, 255};
 const Color dark_green{0, 100, 0, 255};
 const Color dark_blue{0, 0, 139, 255};
 }  // namespace explore::color
-#endif  // COMMON_H
+#endif  // EXPLORE_COMMON_H

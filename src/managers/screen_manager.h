@@ -1,5 +1,5 @@
-#ifndef SCREEN_MANAGER_H
-#define SCREEN_MANAGER_H
+#ifndef EXPLORE_MANAGERS_SCREEN_MANAGER_H
+#define EXPLORE_MANAGERS_SCREEN_MANAGER_H
 
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
@@ -37,4 +37,4 @@ SDL_Renderer *get_renderer();
 void destroy();
 }  // namespace explore::managers::screen
 
-#endif  // SCREEN_MANAGER_H
+#endif  // EXPLORE_MANAGERS_SCREEN_MANAGER_H

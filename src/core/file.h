@@ -1,0 +1,4 @@
+#ifndef EXPLORE_CORE_FILE_H_
+#define EXPLORE_CORE_FILE_H_
+
+#endif // EXPLORE_CORE_FILE_H_
