@@ -88,8 +88,10 @@ find_package(spdlog CONFIG REQUIRED)
 
 add_executable(ExploreApp
         src/main.cpp
+        src/core/file.cpp
         src/managers/screen_manager.cpp
         src/managers/game_manager.cpp
+        src/managers/resource_manager.cpp
 )
 
 add_custom_command(TARGET ExploreApp POST_BUILD

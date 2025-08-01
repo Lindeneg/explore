@@ -6,7 +6,9 @@
 #include <spdlog/spdlog.h>
 
 #include "../common.h"
-#include "screen_manager.h"
+#include "../core/file.h"
+#include "../core/texture2d.h"
+#include "./screen_manager.h"
 
 internal bool is_running{false};
 internal bool do_cap_frame_rate{false};
@@ -32,10 +34,10 @@ internal void calculate_delta_time() {
     const f32 delta_time =
         (static_cast<f32>(SDL_GetTicks()) - previous_frame_time) / 1000.f;
     // clamp value (if running in debugger dt will be messed up)
-    game_context.delta_time =
-        GREATER(delta_time, explore::constants::MAXIMUM_DT)
-            ? explore::constants::MAXIMUM_DT
-            : delta_time;
+    // game_context.delta_time =
+    //    GREATER(delta_time, explore::constants::MAXIMUM_DT)
+    //        ? explore::constants::MAXIMUM_DT
+    //        : delta_time;
     // update previous frame time
     previous_frame_time = static_cast<f32>(SDL_GetTicks());
 }
@@ -96,7 +98,11 @@ void explore::managers::game::render() {
         SDL_CreateTextureFromSurface(screen::get_renderer(), surface)};
     SDL_FreeSurface(surface);
 
-    screen::draw_texture(texture, 10, 10, 32, 32);
+    auto tex = core::Texture2D(
+        "tank", FPATH("assets", "images", "tank-tiger-right.png"), texture, 32,
+        32);
+
+    screen::draw_texture(tex, SDL_Rect{0, 0});
 
     SDL_DestroyTexture(texture);
 

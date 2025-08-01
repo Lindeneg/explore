@@ -4,6 +4,14 @@
 #include <SDL2/SDL_image.h>
 #include <spdlog/spdlog.h>
 
+#include "../core/texture2d.h"
+
+#define FILL_RECT(tex, rect)          \
+    if (rect.w == 0 && rect.h == 0) { \
+        rect.w = tex.width;           \
+        rect.h = tex.height;          \
+    }
+
 internal u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
                                  SDL_INIT_EVENTS};
 
@@ -64,34 +72,19 @@ void explore::managers::screen::set_draw_color(const Color color) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
 
-void explore::managers::screen::draw_texture(SDL_Texture *texture,
-                                             const SDL_Rect *dst) {
-    draw_texture(texture, nullptr, dst);
-}
-
-void explore::managers::screen::draw_texture(SDL_Texture *texture,
-                                             const i32 x_dst, const i32 y_dst,
-                                             const i32 w_dst, const i32 h_dst) {
-    const SDL_Rect dst{x_dst, y_dst, w_dst, h_dst};
-    draw_texture(texture, nullptr, &dst);
-}
-
-void explore::managers::screen::draw_texture(SDL_Texture *texture,
-                                             const i32 x_src, const i32 y_src,
-                                             const i32 w_src, const i32 h_src,
-                                             const i32 x_dst, const i32 y_dst,
-                                             const i32 w_dst, const i32 h_dst) {
-    const SDL_Rect src{x_src, y_src, w_src, h_src};
-    const SDL_Rect dst{x_dst, y_dst, w_dst, h_dst};
-    draw_texture(texture, &src, &dst);
-}
-
-void explore::managers::screen::draw_texture(SDL_Texture *texture,
-                                             const SDL_Rect *src,
-                                             const SDL_Rect *dst) {
+void explore::managers::screen::draw_texture(const core::Texture2D &tex,
+                                             SDL_Rect dst) {
     ASSERT_RET_V(renderer);
-    ASSERT_RET_V(texture);
-    SDL_RenderCopy(renderer, texture, src, dst);
+    FILL_RECT(tex, dst)
+    SDL_RenderCopy(renderer, tex.texture, nullptr, &dst);
+}
+
+void explore::managers::screen::draw_texture(const core::Texture2D &tex,
+                                             SDL_Rect src, SDL_Rect dst) {
+    ASSERT_RET_V(renderer);
+    FILL_RECT(tex, src)
+    FILL_RECT(tex, dst)
+    SDL_RenderCopy(renderer, tex.texture, &src, &dst);
 }
 
 void explore::managers::screen::clear() {

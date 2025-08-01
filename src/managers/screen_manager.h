@@ -8,21 +8,18 @@
 
 #include "../common.h"
 
+namespace explore::core {
+struct Texture2D;
+}
+
 namespace explore::managers::screen {
 bool initialize();
 
 void set_draw_color(Color color);
 
-void draw_texture(SDL_Texture *texture, const SDL_Rect *dst);
+void draw_texture(const core::Texture2D &tex, SDL_Rect dst);
 
-void draw_texture(SDL_Texture *texture, i32 x_dst, i32 y_dst, i32 w_dst,
-                  i32 h_dst);
-
-void draw_texture(SDL_Texture *texture, i32 x_src, i32 y_src, i32 w_src,
-                  i32 h_src, i32 x_dst, i32 y_dst, i32 w_dst, i32 h_dst);
-
-void draw_texture(SDL_Texture *texture, const SDL_Rect *src,
-                  const SDL_Rect *dst);
+void draw_texture(const core::Texture2D &tex, SDL_Rect src, SDL_Rect dst);
 
 void clear();
 

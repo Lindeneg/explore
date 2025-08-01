@@ -9,9 +9,7 @@
 
 namespace explore::core {
 struct Texture2D {
-    static const i32 DEFAULT_KIND = -1;
-
-    const int kind;
+    const std::string name;
     const std::filesystem::path path;
 
     SDL_Texture *texture;
@@ -19,13 +17,12 @@ struct Texture2D {
     const u32 width;
     const u32 height;
 
-    Texture2D()
-        : kind(DEFAULT_KIND), path(""), texture(nullptr), width(0), height(0) {}
-    Texture2D(const int kind, const std::filesystem::path path, const u32 width,
-              const u32 height)
-        : kind(kind),
+    Texture2D() : name(""), path(""), texture(nullptr), width(0), height(0) {}
+    Texture2D(const std::string name, const std::filesystem::path path,
+              SDL_Texture *texture, const u32 width, const u32 height)
+        : name(name),
           path(path),
-          texture(nullptr),
+          texture(texture),
           width(width),
           height(height) {}
 };
