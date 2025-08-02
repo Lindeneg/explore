@@ -5,21 +5,18 @@
 #include <SDL2/SDL_video.h>
 
 #include <glm/glm.hpp>
+#include <string>
 
 #include "../common.h"
-
-namespace explore::core {
-struct Texture2D;
-}
 
 namespace explore::managers::screen {
 bool initialize();
 
 void set_draw_color(Color color);
 
-void draw_texture(const core::Texture2D &tex, SDL_Rect dst);
+void draw_texture(const std::string &name, SDL_Rect dst);
 
-void draw_texture(const core::Texture2D &tex, SDL_Rect src, SDL_Rect dst);
+void draw_texture(const std::string &name, SDL_Rect src, SDL_Rect dst);
 
 void clear();
 

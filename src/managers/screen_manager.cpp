@@ -5,11 +5,12 @@
 #include <spdlog/spdlog.h>
 
 #include "../core/texture2d.h"
+#include "resource_manager.h"
 
 #define FILL_RECT(tex, rect)          \
     if (rect.w == 0 && rect.h == 0) { \
-        rect.w = tex.width;           \
-        rect.h = tex.height;          \
+        rect.w = tex->width;          \
+        rect.h = tex->height;         \
     }
 
 static u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
@@ -72,19 +73,26 @@ void explore::managers::screen::set_draw_color(const Color color) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
 
-void explore::managers::screen::draw_texture(const core::Texture2D &tex,
+void explore::managers::screen::draw_texture(const std::string &name,
                                              SDL_Rect dst) {
     ASSERT_RET_V(renderer);
-    FILL_RECT(tex, dst)
-    SDL_RenderCopy(renderer, tex.texture, nullptr, &dst);
+
+    const core::Texture2D *texture{resource::get_texture(name)};
+    ASSERT_RET_V(texture);
+
+    FILL_RECT(texture, dst)
+    SDL_RenderCopy(renderer, texture->data, nullptr, &dst);
 }
 
-void explore::managers::screen::draw_texture(const core::Texture2D &tex,
+void explore::managers::screen::draw_texture(const std::string &name,
                                              SDL_Rect src, SDL_Rect dst) {
     ASSERT_RET_V(renderer);
-    FILL_RECT(tex, src)
-    FILL_RECT(tex, dst)
-    SDL_RenderCopy(renderer, tex.texture, &src, &dst);
+    const core::Texture2D *texture{resource::get_texture(name)};
+    ASSERT_RET_V(texture);
+
+    FILL_RECT(texture, src)
+    FILL_RECT(texture, dst)
+    SDL_RenderCopy(renderer, texture->data, &src, &dst);
 }
 
 void explore::managers::screen::clear() {

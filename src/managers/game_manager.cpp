@@ -31,14 +31,15 @@ static void calculate_delta_time() {
     if (do_cap_frame_rate) {
         cap_frame_rate();
     }
-    const f32 delta_time =
-        (static_cast<f32>(SDL_GetTicks()) - previous_frame_time) / 1000.f;
+    const f32 delta_time = (static_cast<f32>(SDL_GetTicks()) -
+                            static_cast<f32>(previous_frame_time)) /
+                           1000.f;
 
     // clamp value (if running in debugger dt will be messed up)
     game_context.delta_time =
         std::min(delta_time, explore::constants::MAXIMUM_DT);
 
-    previous_frame_time = static_cast<f32>(SDL_GetTicks());
+    previous_frame_time = SDL_GetTicks();
 }
 
 bool explore::managers::game::initialize() {
@@ -92,7 +93,7 @@ void explore::managers::game::render() {
     screen::set_draw_color(color::black);
     screen::clear();
 
-    screen::draw_texture(*resource::get_texture("tank"), SDL_Rect{400, 300});
+    screen::draw_texture("tank", SDL_Rect{400, 300});
 
     screen::present();
 }

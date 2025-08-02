@@ -53,7 +53,7 @@ bool remove_texture(const std::string &name) {
         return false;
     }
     spdlog::trace("removing texture: '{}'", name);
-    SDL_DestroyTexture(iter->second->texture);
+    SDL_DestroyTexture(iter->second->data);
     textures.erase(iter);
     delete iter->second;
     return true;
@@ -62,7 +62,7 @@ bool remove_texture(const std::string &name) {
 void destroy() {
     spdlog::trace("clearing all resources");
     for (const auto &iter : textures) {
-        SDL_DestroyTexture(iter.second->texture);
+        SDL_DestroyTexture(iter.second->data);
         delete iter.second;
     }
     textures.clear();
