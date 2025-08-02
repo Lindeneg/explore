@@ -2,6 +2,7 @@
 #define EXPLORE_CORE_TEXTURE2D_H_
 
 #include <SDL_render.h>
+#include <spdlog/spdlog.h>
 
 #include <filesystem>
 
@@ -25,6 +26,15 @@ struct Texture2D {
           texture(texture),
           width(width),
           height(height) {}
+
+    Texture2D(const Texture2D &obj)
+        : name(obj.name),
+          path(obj.path),
+          texture(obj.texture),
+          width(obj.width),
+          height(obj.height) {
+        spdlog::trace("TEXTURE COPY CONSTRUCTOR CALLED");
+    }
 };
 }  // namespace explore::core
 

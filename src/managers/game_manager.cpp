@@ -6,15 +6,17 @@
 #include <spdlog/spdlog.h>
 
 #include "../common.h"
+#include "../core/context.h"
 #include "../core/file.h"
 #include "../core/texture2d.h"
 #include "./screen_manager.h"
+#include "resource_manager.h"
 
 static bool is_running{false};
 static bool do_cap_frame_rate{false};
 static SDL_Event event{};
 static u32 previous_frame_time{};
-static explore::GameContext game_context{};
+static explore::core::GameContext game_context{};
 
 static void cap_frame_rate() {
     const i32 time_to_wait = static_cast<i32>(
@@ -30,15 +32,13 @@ static void calculate_delta_time() {
     if (do_cap_frame_rate) {
         cap_frame_rate();
     }
-    // calculate delta time
     const f32 delta_time =
         (static_cast<f32>(SDL_GetTicks()) - previous_frame_time) / 1000.f;
+
     // clamp value (if running in debugger dt will be messed up)
-    // game_context.delta_time =
-    //    GREATER(delta_time, explore::constants::MAXIMUM_DT)
-    //        ? explore::constants::MAXIMUM_DT
-    //        : delta_time;
-    // update previous frame time
+    game_context.delta_time =
+        std::min(delta_time, explore::constants::MAXIMUM_DT);
+
     previous_frame_time = static_cast<f32>(SDL_GetTicks());
 }
 
@@ -50,13 +50,15 @@ bool explore::managers::game::initialize() {
     return true;
 }
 
-void explore::managers::game::setup() {}
+void explore::managers::game::setup() {
+    resource::add_texture(
+        "tank", FPATH("assets", "images", "tank-tiger-right.png"), 32, 32);
+}
 
 void explore::managers::game::load_level(const u32 level) {}
 
 void explore::managers::game::run() {
     setup();
-    // ReSharper disable once CppDFALoopConditionNotUpdated
     while (is_running) {
         process_input();
         update();
@@ -91,25 +93,12 @@ void explore::managers::game::render() {
     screen::set_draw_color(color::black);
     screen::clear();
 
-    SDL_Surface *surface{IMG_Load("assets/images/tank-tiger-right.png")};
-    ASSERT_RET_V(surface);
-
-    SDL_Texture *texture{
-        SDL_CreateTextureFromSurface(screen::get_renderer(), surface)};
-    SDL_FreeSurface(surface);
-
-    auto tex = core::Texture2D(
-        "tank", FPATH("assets", "images", "tank-tiger-right.png"), texture, 32,
-        32);
-
-    screen::draw_texture(tex, SDL_Rect{400, 300});
-
-    SDL_DestroyTexture(texture);
+    screen::draw_texture(*resource::get_texture("tank"), SDL_Rect{400, 300});
 
     screen::present();
 }
 
 void explore::managers::game::destroy() {
-    // asset::destroy();
+    resource::destroy();
     screen::destroy();
 }

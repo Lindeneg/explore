@@ -13,7 +13,7 @@ namespace explore {
 
 namespace file {
 
-// Reads the entire file into a byte vector. Returns true on success.
+// reads the entire file into a byte vector. Returns true on success
 bool read_all(const std::filesystem::path &path, std::vector<u8> &out) {
     std::ifstream file(path, std::ios::binary);
     ASSERT_RET_MSG(file.is_open(), false, "Failed to open file: %ls",
@@ -42,7 +42,7 @@ bool read_all(const std::filesystem::path &path, std::vector<u8> &out) {
     return bytesRead > 0;
 }
 
-// Reads the entire file into a std::string. Returns true on success.
+// reads the entire file into a std::string. Returns true on success
 bool read_all(const std::filesystem::path &path, std::string &out) {
     std::vector<u8> buffer;
     if (!read_all(path, buffer)) {
@@ -56,7 +56,7 @@ bool read_all(const std::filesystem::path &path, std::string &out) {
 
 namespace path {
 
-// Constructs a filesystem path from an initializer list of path segments.
+// constructs a filesystem path from an initializer list of path segments
 std::filesystem::path construct(
     const std::initializer_list<std::string_view> parts) {
     std::filesystem::path result;

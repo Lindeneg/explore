@@ -76,11 +76,6 @@ typedef unsigned char uchar;
     } while (0)
 
 namespace explore {
-/* contains game-specific information and configuration */
-struct GameContext {
-    f32 delta_time;
-    bool draw_collision_rects;
-};
 
 using Color = SDL_Color;
 }  // namespace explore
