@@ -8,9 +8,8 @@
 #include "../common.h"
 #include "../core/context.h"
 #include "../core/file.h"
-#include "../core/texture2d.h"
+#include "./resource_manager.h"
 #include "./screen_manager.h"
-#include "resource_manager.h"
 
 static bool is_running{false};
 static bool do_cap_frame_rate{false};

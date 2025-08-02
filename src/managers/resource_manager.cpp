@@ -41,11 +41,9 @@ bool add_texture(const std::string &name, const std::filesystem::path &path,
 
 const core::Texture2D *get_texture(const std::string &name) {
     auto iter{textures.find(name)};
-    if (iter != textures.end()) {
-        return iter->second;
-    }
-    spdlog::error("failed to get texture: '{}'", name);
-    return nullptr;
+    ASSERT_RET_MSG(iter != textures.end(), nullptr, "texture '%s' not found",
+                   name.c_str());
+    return iter->second;
 }
 
 bool remove_texture(const std::string &name) {
