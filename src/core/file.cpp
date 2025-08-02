@@ -57,7 +57,7 @@ namespace path {
 
 // Constructs a filesystem path from an initializer list of path segments.
 std::filesystem::path construct(
-    const std::initializer_list<std::string_view> &parts) {
+    const std::initializer_list<std::string_view> parts) {
     std::filesystem::path result;
     for (auto &part : parts) {
         result /= part;

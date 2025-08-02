@@ -12,15 +12,15 @@
         rect.h = tex.height;          \
     }
 
-internal u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
-                                 SDL_INIT_EVENTS};
+static u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
+                               SDL_INIT_EVENTS};
 
-internal SDL_Window *window{nullptr};
-internal SDL_Renderer *renderer{nullptr};
-internal SDL_DisplayMode display_mode{};
-internal auto dimensions{glm::ivec2(0, 0)};
+static SDL_Window *window{nullptr};
+static SDL_Renderer *renderer{nullptr};
+static SDL_DisplayMode display_mode{};
+static auto dimensions{glm::ivec2(0, 0)};
 
-internal bool initialize_sdl() {
+static bool initialize_sdl() {
     if (SDL_WasInit(sdl_subsystem_flags)) {
         spdlog::warn("SDL has already been initialized");
         return true;

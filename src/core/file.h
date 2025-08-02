@@ -10,14 +10,16 @@
 
 namespace explore::file {
 
-// read_all: Reads the entire contents of a file into a dynamic array.
+// reads the entire contents of a file into a dynamic array
 bool read_all(const std::filesystem::path &path, std::vector<u8> &out);
-// read_all: Reads the entire contents of a file into a string.
+// reads the entire contents of a file into a string
 bool read_all(const std::filesystem::path &path, std::string &out);
+
+// TODO: allow reading chunks
 }  // namespace explore::file
 
 namespace explore::path {
-// construct: Constructs a path from a list of strings.
+// constructs a path from a list of strings
 std::filesystem::path construct(std::initializer_list<std::string_view> paths);
 }  // namespace explore::path
 

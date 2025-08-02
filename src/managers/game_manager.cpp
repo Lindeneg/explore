@@ -10,13 +10,13 @@
 #include "../core/texture2d.h"
 #include "./screen_manager.h"
 
-internal bool is_running{false};
-internal bool do_cap_frame_rate{false};
-internal SDL_Event event{};
-internal u32 previous_frame_time{};
-internal explore::GameContext game_context{};
+static bool is_running{false};
+static bool do_cap_frame_rate{false};
+static SDL_Event event{};
+static u32 previous_frame_time{};
+static explore::GameContext game_context{};
 
-internal void cap_frame_rate() {
+static void cap_frame_rate() {
     const i32 time_to_wait = static_cast<i32>(
         explore::constants::FRAME_TARGET -
         (static_cast<u32>(SDL_GetTicks()) - previous_frame_time));
@@ -26,7 +26,7 @@ internal void cap_frame_rate() {
     }
 }
 
-internal void calculate_delta_time() {
+static void calculate_delta_time() {
     if (do_cap_frame_rate) {
         cap_frame_rate();
     }
@@ -102,7 +102,7 @@ void explore::managers::game::render() {
         "tank", FPATH("assets", "images", "tank-tiger-right.png"), texture, 32,
         32);
 
-    screen::draw_texture(tex, SDL_Rect{0, 0});
+    screen::draw_texture(tex, SDL_Rect{5, 5, 10, 10}, SDL_Rect{0, 0, 32, 32});
 
     SDL_DestroyTexture(texture);
 
