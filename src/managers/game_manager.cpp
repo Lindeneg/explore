@@ -14,33 +14,10 @@
 static bool is_running{false};
 static bool do_cap_frame_rate{false};
 static SDL_Event event{};
-static u32 previous_frame_time{};
 static explore::core::GameContext game_context{};
 
-static void cap_frame_rate() {
-    const i32 time_to_wait = static_cast<i32>(
-        explore::constants::FRAME_TARGET -
-        (static_cast<u32>(SDL_GetTicks()) - previous_frame_time));
-    // only delay if too fast
-    if (time_to_wait > 0 && time_to_wait < explore::constants::FRAME_TARGET) {
-        SDL_Delay(time_to_wait);
-    }
-}
-
-static void calculate_delta_time() {
-    if (do_cap_frame_rate) {
-        cap_frame_rate();
-    }
-    const f32 delta_time = (static_cast<f32>(SDL_GetTicks()) -
-                            static_cast<f32>(previous_frame_time)) /
-                           1000.f;
-
-    // clamp value (if running in debugger dt will be messed up)
-    game_context.delta_time =
-        std::min(delta_time, explore::constants::MAXIMUM_DT);
-
-    previous_frame_time = SDL_GetTicks();
-}
+static glm::vec2 pos;
+static glm::vec2 vel;
 
 bool explore::managers::game::initialize() {
     if (!screen::initialize()) {
@@ -51,6 +28,9 @@ bool explore::managers::game::initialize() {
 }
 
 void explore::managers::game::setup() {
+    pos = glm::vec2(10, 20);
+    vel = glm::vec2(25.0, 25.0);
+
     resource::add_texture(
         "tank", FPATH("assets", "images", "tank-tiger-right.png"), 32, 32);
 }
@@ -87,13 +67,18 @@ void explore::managers::game::process_input() {
     }
 }
 
-void explore::managers::game::update() { calculate_delta_time(); }
+void explore::managers::game::update() {
+    game_context.update_delta_time();
+    pos.x += vel.x * game_context.delta_time;
+    pos.y += vel.y * game_context.delta_time;
+}
 
 void explore::managers::game::render() {
     screen::set_draw_color(color::black);
     screen::clear();
 
-    screen::draw_texture("tank", SDL_Rect{400, 300});
+    screen::draw_texture("tank", SDL_Rect{static_cast<int>(pos.x),
+                                          static_cast<int>(pos.y), 64, 64});
 
     screen::present();
 }

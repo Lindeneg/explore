@@ -5,9 +5,25 @@
 
 namespace explore::core {
 /* contains game-specific information and configuration */
-struct GameContext {
+class GameContext {
+   public:
     f32 delta_time;
     bool draw_collision_rects;
+    bool capped_frame_rate;
+
+   public:
+    GameContext()
+        : delta_time(0.0f),
+          draw_collision_rects(false),
+          capped_frame_rate(false) {}
+
+    void update_delta_time();
+
+   private:
+    u32 previous_frame_time;
+
+   private:
+    void cap_frame_rate();
 };
 }  // namespace explore::core
 
