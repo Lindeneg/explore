@@ -102,7 +102,7 @@ void explore::managers::game::render() {
         "tank", FPATH("assets", "images", "tank-tiger-right.png"), texture, 32,
         32);
 
-    screen::draw_texture(tex, SDL_Rect{5, 5, 10, 10}, SDL_Rect{0, 0, 32, 32});
+    screen::draw_texture(tex, SDL_Rect{400, 300});
 
     SDL_DestroyTexture(texture);
 
