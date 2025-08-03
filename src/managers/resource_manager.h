@@ -7,7 +7,7 @@
 #include "../common.h"
 
 namespace explore::core {
-struct Texture2D;
+class Texture2D;
 }
 
 namespace explore::managers::resource {

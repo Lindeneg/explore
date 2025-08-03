@@ -24,7 +24,7 @@ void GameContext::cap_frame_rate() {
         explore::constants::FRAME_TARGET -
         (static_cast<u32>(SDL_GetTicks()) - previous_frame_time));
     // only delay if too fast
-    if (time_to_wait > 0 && time_to_wait < explore::constants::FRAME_TARGET) {
+    if (time_to_wait > 0 && time_to_wait <= explore::constants::FRAME_TARGET) {
         SDL_Delay(time_to_wait);
     }
 }

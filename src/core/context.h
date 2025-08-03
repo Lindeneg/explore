@@ -15,7 +15,8 @@ class GameContext {
     GameContext()
         : delta_time(0.0f),
           draw_collision_rects(false),
-          capped_frame_rate(false) {}
+          capped_frame_rate(false),
+          previous_frame_time(0) {}
 
     void update_delta_time();
 

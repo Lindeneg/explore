@@ -81,6 +81,8 @@ using Color = SDL_Color;
 }  // namespace explore
 
 namespace explore::constants {
+// TODO maybe move target FPS and frame target to configuration
+
 /* target FPS for fixed updates */
 const i32 FPS{60};
 
@@ -90,18 +92,6 @@ const i32 FRAME_TARGET{1000 / FPS};
 /* maximum delta time (useful if running in debugger) */
 const f32 MAXIMUM_DT{0.05f};
 
-/* used to produce epsilon relative
- * to value of some given operands */
-const f32 REL_EPSILON{1e-8f};
-
-/* absolute epsilon value */
-const f32 ABS_EPSILON{1e-12f};
-
-/* approximation of PI */
-const f64 PI{3.14159265359};
-
-/* twice the pi, double the fun! */
-const f64 PI2{PI * 2};
 }  // namespace explore::constants
 
 /* collection of sdl colors */

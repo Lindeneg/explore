@@ -1,6 +1,5 @@
 #include "resource_manager.h"
 
-#include <SDL_image.h>
 #include <SDL_render.h>
 #include <SDL_surface.h>
 #include <spdlog/spdlog.h>
@@ -22,20 +21,15 @@ bool add_texture(const std::string &name, const std::filesystem::path &path,
         spdlog::warn("texture '{}' has already been added", name);
         return true;
     }
-    SDL_Surface *surface{IMG_Load(path.string().c_str())};
-    ASSERT_RET(surface, false);
+    auto *tex{new core::Texture2D(name, path, width, height)};
 
-    SDL_Texture *sdl_texture{
-        SDL_CreateTextureFromSurface(screen::get_renderer(), surface)};
-    SDL_FreeSurface(surface);
+    if (!tex->initialize(screen::get_renderer())) {
+        spdlog::error("failed to initialize texture '{}", name);
+        delete tex;
+        return false;
+    }
 
-    spdlog::debug("adding texture '{}' with path '{}'", name, path.string());
-
-    core::Texture2D *t{
-        new core::Texture2D(name, path, sdl_texture, width, height)};
-
-    textures.emplace(name, t);
-
+    textures.emplace(name, tex);
     return true;
 }
 
@@ -52,8 +46,6 @@ bool remove_texture(const std::string &name) {
         spdlog::error("failed to remove texture: '{}'", name);
         return false;
     }
-    spdlog::trace("removing texture: '{}'", name);
-    SDL_DestroyTexture(iter->second->data);
     textures.erase(iter);
     delete iter->second;
     return true;
@@ -62,7 +54,6 @@ bool remove_texture(const std::string &name) {
 void destroy() {
     spdlog::trace("clearing all resources");
     for (const auto &iter : textures) {
-        SDL_DestroyTexture(iter.second->data);
         delete iter.second;
     }
     textures.clear();

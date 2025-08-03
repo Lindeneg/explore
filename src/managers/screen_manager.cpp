@@ -9,8 +9,8 @@
 
 #define FILL_RECT(tex, rect)          \
     if (rect.w == 0 && rect.h == 0) { \
-        rect.w = tex->width;          \
-        rect.h = tex->height;         \
+        rect.w = tex->get_width();    \
+        rect.h = tex->get_height();   \
     }
 
 static u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
@@ -81,7 +81,7 @@ void explore::managers::screen::draw_texture(const std::string &name,
     ASSERT_RET_V(texture);
 
     FILL_RECT(texture, dst)
-    SDL_RenderCopy(renderer, texture->data, nullptr, &dst);
+    SDL_RenderCopy(renderer, texture->get_data(), nullptr, &dst);
 }
 
 void explore::managers::screen::draw_texture(const std::string &name,
@@ -92,7 +92,7 @@ void explore::managers::screen::draw_texture(const std::string &name,
 
     FILL_RECT(texture, src)
     FILL_RECT(texture, dst)
-    SDL_RenderCopy(renderer, texture->data, &src, &dst);
+    SDL_RenderCopy(renderer, texture->get_data(), &src, &dst);
 }
 
 void explore::managers::screen::clear() {

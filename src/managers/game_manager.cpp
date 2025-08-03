@@ -29,7 +29,7 @@ bool explore::managers::game::initialize() {
 
 void explore::managers::game::setup() {
     pos = glm::vec2(10, 20);
-    vel = glm::vec2(25.0, 25.0);
+    vel = glm::vec2(100.0, 0.0);
 
     resource::add_texture(
         "tank", FPATH("assets", "images", "tank-tiger-right.png"), 32, 32);
@@ -77,8 +77,8 @@ void explore::managers::game::render() {
     screen::set_draw_color(color::black);
     screen::clear();
 
-    screen::draw_texture("tank", SDL_Rect{static_cast<int>(pos.x),
-                                          static_cast<int>(pos.y), 64, 64});
+    screen::draw_texture(
+        "tank", SDL_Rect{static_cast<int>(pos.x), static_cast<int>(pos.y)});
 
     screen::present();
 }
