@@ -2,7 +2,6 @@
 
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_timer.h>
 #include <spdlog/spdlog.h>
 
 #include "../common.h"
@@ -12,7 +11,6 @@
 #include "./screen_manager.h"
 
 static bool is_running{false};
-static bool do_cap_frame_rate{false};
 static SDL_Event event{};
 static explore::core::GameContext game_context{};
 

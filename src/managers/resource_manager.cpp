@@ -1,7 +1,6 @@
 #include "resource_manager.h"
 
 #include <SDL_render.h>
-#include <SDL_surface.h>
 #include <spdlog/spdlog.h>
 
 #include <string>
@@ -16,8 +15,7 @@ static std::unordered_map<std::string, const explore::core::Texture2D *>
 namespace explore::managers::resource {
 bool add_texture(const std::string &name, const std::filesystem::path &path,
                  const u32 width, const u32 height) {
-    auto iter{textures.find(name)};
-    if (iter != textures.end()) {
+    if (const auto iter{textures.find(name)}; iter != textures.end()) {
         spdlog::warn("texture '{}' has already been added", name);
         return true;
     }
@@ -34,14 +32,14 @@ bool add_texture(const std::string &name, const std::filesystem::path &path,
 }
 
 const core::Texture2D *get_texture(const std::string &name) {
-    auto iter{textures.find(name)};
+    const auto iter{textures.find(name)};
     ASSERT_RET_MSG(iter != textures.end(), nullptr, "texture '%s' not found",
                    name.c_str());
     return iter->second;
 }
 
 bool remove_texture(const std::string &name) {
-    auto iter{textures.find(name)};
+    const auto iter{textures.find(name)};
     if (iter == textures.end()) {
         spdlog::error("failed to remove texture: '{}'", name);
         return false;

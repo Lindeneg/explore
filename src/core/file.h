@@ -20,7 +20,7 @@ bool read_all(const std::filesystem::path &path, std::string &out);
 
 namespace explore::path {
 // constructs a path from a list of strings
-std::filesystem::path construct(std::initializer_list<std::string_view> paths);
+std::filesystem::path construct(std::initializer_list<std::string_view> parts);
 }  // namespace explore::path
 
 #endif  // EXPLORE_CORE_FILE_H_

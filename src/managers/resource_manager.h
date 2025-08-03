@@ -12,7 +12,7 @@ class Texture2D;
 
 namespace explore::managers::resource {
 bool add_texture(const std::string &name, const std::filesystem::path &path,
-                 const u32 width, const u32 height);
+                  u32 width,  u32 height);
 
 const core::Texture2D *get_texture(const std::string &name);
 

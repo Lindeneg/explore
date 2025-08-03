@@ -16,15 +16,15 @@ class GameContext {
         : delta_time(0.0f),
           draw_collision_rects(false),
           capped_frame_rate(false),
-          previous_frame_time(0) {}
+          _previous_frame_time(0) {}
 
     void update_delta_time();
 
    private:
-    u32 previous_frame_time;
+    u32 _previous_frame_time;
 
    private:
-    void cap_frame_rate();
+    void _cap_frame_rate() const;
 };
 }  // namespace explore::core
 

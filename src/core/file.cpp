@@ -20,7 +20,7 @@ bool read_all(const std::filesystem::path &path, std::vector<u8> &out) {
                    path.c_str());
 
     file.seekg(0, std::ios::end);
-    std::streamsize size = file.tellg();
+    const std::streamsize size = file.tellg();
     ASSERT_RET_MSG(size >= 0, false, "Failed to get file size: %ls",
                    path.c_str());
 
@@ -30,7 +30,7 @@ bool read_all(const std::filesystem::path &path, std::vector<u8> &out) {
 
     out.resize(static_cast<size_t>(size));
     file.read(reinterpret_cast<char *>(out.data()), size);
-    std::streamsize bytesRead = file.gcount();
+    const std::streamsize bytesRead = file.gcount();
 
     if (bytesRead < size) {
         spdlog::warn("expected {} bytes but read {} from file: {}",

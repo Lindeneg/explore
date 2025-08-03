@@ -84,37 +84,37 @@ namespace explore::constants {
 // TODO maybe move target FPS and frame target to configuration
 
 /* target FPS for fixed updates */
-const i32 FPS{60};
+constexpr i32 FPS{60};
 
 /* target time in ms for each frame */
-const i32 FRAME_TARGET{1000 / FPS};
+constexpr i32 FRAME_TARGET{1000 / FPS};
 
 /* maximum delta time (useful if running in debugger) */
-const f32 MAXIMUM_DT{0.05f};
+constexpr f32 MAXIMUM_DT{0.05f};
 
 }  // namespace explore::constants
 
 /* collection of sdl colors */
 namespace explore::color {
-const Color white{255, 255, 255, 255};
-const Color black{0, 0, 0, 255};
-const Color red{255, 0, 0, 255};
-const Color green{0, 255, 0, 255};
-const Color blue{0, 0, 255, 255};
-const Color yellow{255, 255, 0, 255};
-const Color cyan{0, 255, 255, 255};
-const Color magenta{255, 0, 255, 255};
-const Color gray{128, 128, 128, 255};
-const Color light_gray{211, 211, 211, 255};
-const Color dark_gray{64, 64, 64, 255};
-const Color orange{255, 165, 0, 255};
-const Color pink{255, 192, 203, 255};
-const Color purple{128, 0, 128, 255};
-const Color brown{165, 42, 42, 255};
-const Color light_blue{173, 216, 230, 255};
-const Color light_green{144, 238, 144, 255};
-const Color dark_red{139, 0, 0, 255};
-const Color dark_green{0, 100, 0, 255};
-const Color dark_blue{0, 0, 139, 255};
+constexpr Color white{255, 255, 255, 255};
+constexpr Color black{0, 0, 0, 255};
+constexpr Color red{255, 0, 0, 255};
+constexpr Color green{0, 255, 0, 255};
+constexpr Color blue{0, 0, 255, 255};
+constexpr Color yellow{255, 255, 0, 255};
+constexpr Color cyan{0, 255, 255, 255};
+constexpr Color magenta{255, 0, 255, 255};
+constexpr Color gray{128, 128, 128, 255};
+constexpr Color light_gray{211, 211, 211, 255};
+constexpr Color dark_gray{64, 64, 64, 255};
+constexpr Color orange{255, 165, 0, 255};
+constexpr Color pink{255, 192, 203, 255};
+constexpr Color purple{128, 0, 128, 255};
+constexpr Color brown{165, 42, 42, 255};
+constexpr Color light_blue{173, 216, 230, 255};
+constexpr Color light_green{144, 238, 144, 255};
+constexpr Color dark_red{139, 0, 0, 255};
+constexpr Color dark_green{0, 100, 0, 255};
+constexpr Color dark_blue{0, 0, 139, 255};
 }  // namespace explore::color
 #endif  // EXPLORE_COMMON_H

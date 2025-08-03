@@ -1,5 +1,8 @@
 .idea
+.vs
+.cache
+out
+vcpkg_installed
 cmake-build-*
 misc
-.cache
 compile_commands.json
