@@ -1,4 +1,4 @@
-    cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.15)
 project(ExploreApp LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
@@ -94,6 +94,7 @@ add_executable(ExploreApp
         src/managers/screen_manager.cpp
         src/managers/game_manager.cpp
         src/managers/resource_manager.cpp
+        src/ecs/ecs.cpp
 )
 
 add_custom_command(TARGET ExploreApp POST_BUILD

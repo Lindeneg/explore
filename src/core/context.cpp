@@ -21,8 +21,7 @@ void GameContext::update_delta_time() {
 
 void GameContext::_cap_frame_rate() const {
     const i32 time_to_wait = static_cast<i32>(
-        constants::FRAME_TARGET -
-        (SDL_GetTicks() - _previous_frame_time));
+        constants::FRAME_TARGET - (SDL_GetTicks() - _previous_frame_time));
     // only delay if too fast
     if (time_to_wait > 0 && time_to_wait <= constants::FRAME_TARGET) {
         SDL_Delay(time_to_wait);

@@ -6,16 +6,12 @@
 
 #include "../common.h"
 #include "../core/context.h"
-#include "../core/file.h"
 #include "./resource_manager.h"
 #include "./screen_manager.h"
 
 static bool is_running{false};
 static SDL_Event event{};
 static explore::core::GameContext game_context{};
-
-static glm::vec2 pos;
-static glm::vec2 vel;
 
 bool explore::managers::game::initialize() {
     if (!screen::initialize()) {
@@ -26,11 +22,14 @@ bool explore::managers::game::initialize() {
 }
 
 void explore::managers::game::setup() {
-    pos = glm::vec2(10, 20);
-    vel = glm::vec2(100.0, 0.0);
-
-    resource::add_texture(
-        "tank", FPATH("assets", "images", "tank-tiger-right.png"), 32, 32);
+    //    ecs::Entity tank{registry.create_entity()};
+    //    tank.add_component<component::Transform>();
+    //    tank.add_component<component::BoxCollider>();
+    //    tank.add_component<component::Sprite>(
+    //        FPATH("assets", "images", "tank-tiger-right.png"), 32, 32);
+    //    resource::add_texture(
+    //        "tank", FPATH("assets", "images", "tank-tiger-right.png"), 32,
+    //        32);
 }
 
 void explore::managers::game::load_level(const u32 level) {}
@@ -65,18 +64,13 @@ void explore::managers::game::process_input() {
     }
 }
 
-void explore::managers::game::update() {
-    game_context.update_delta_time();
-    pos.x += vel.x * game_context.delta_time;
-    pos.y += vel.y * game_context.delta_time;
-}
+void explore::managers::game::update() { game_context.update_delta_time(); }
 
 void explore::managers::game::render() {
     screen::set_draw_color(color::black);
     screen::clear();
 
-    screen::draw_texture(
-        "tank", SDL_Rect{static_cast<int>(pos.x), static_cast<int>(pos.y)});
+    // TODO RENDER
 
     screen::present();
 }
