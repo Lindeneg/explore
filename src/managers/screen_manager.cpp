@@ -7,10 +7,16 @@
 #include "../core/texture2d.h"
 #include "resource_manager.h"
 
-#define FILL_RECT(tex, rect)          \
+#define FILL_RECT_P(tex, rect)        \
     if (rect.w == 0 && rect.h == 0) { \
         rect.w = tex->get_width();    \
         rect.h = tex->get_height();   \
+    }
+
+#define FILL_RECT(tex, rect)          \
+    if (rect.w == 0 && rect.h == 0) { \
+        rect.w = tex.get_width();     \
+        rect.h = tex.get_height();    \
     }
 
 static u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
@@ -77,22 +83,24 @@ void explore::managers::screen::draw_texture(const std::string &name,
                                              SDL_Rect dst) {
     ASSERT_RET_V(renderer);
 
-    const core::Texture2D *texture{resource::get_texture(name)};
-    ASSERT_RET_V(texture);
+    auto opt_texture{resource::get_texture(name)};
+    ASSERT_RET_V(opt_texture);
+    auto texture{opt_texture->get()};
 
     FILL_RECT(texture, dst)
-    SDL_RenderCopy(renderer, texture->get_data(), nullptr, &dst);
+    SDL_RenderCopy(renderer, texture.get_data(), nullptr, &dst);
 }
 
 void explore::managers::screen::draw_texture(const std::string &name,
                                              SDL_Rect src, SDL_Rect dst) {
     ASSERT_RET_V(renderer);
-    const core::Texture2D *texture{resource::get_texture(name)};
-    ASSERT_RET_V(texture);
+    auto opt_texture{resource::get_texture(name)};
+    ASSERT_RET_V(opt_texture);
+    auto texture{opt_texture->get()};
 
     FILL_RECT(texture, src)
     FILL_RECT(texture, dst)
-    SDL_RenderCopy(renderer, texture->get_data(), &src, &dst);
+    SDL_RenderCopy(renderer, texture.get_data(), &src, &dst);
 }
 
 void explore::managers::screen::clear() {

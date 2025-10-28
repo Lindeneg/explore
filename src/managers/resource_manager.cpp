@@ -3,13 +3,16 @@
 #include <SDL_render.h>
 #include <spdlog/spdlog.h>
 
+#include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 
 #include "../core/texture2d.h"
 #include "./screen_manager.h"
 
-static std::unordered_map<std::string, const explore::core::Texture2D *>
+static std::unordered_map<std::string,
+                          std::unique_ptr<explore::core::Texture2D>>
     textures{};
 
 namespace explore::managers::resource {
@@ -19,23 +22,24 @@ bool add_texture(const std::string &name, const std::filesystem::path &path,
         spdlog::warn("texture '{}' has already been added", name);
         return true;
     }
-    auto *tex{new core::Texture2D(name, path, width, height)};
+
+    auto tex{std::make_unique<core::Texture2D>(name, path, width, height)};
 
     if (!tex->initialize(screen::get_renderer())) {
         spdlog::error("failed to initialize texture '{}", name);
-        delete tex;
         return false;
     }
 
-    textures.emplace(name, tex);
+    textures.emplace(name, std::move(tex));
     return true;
 }
 
-const core::Texture2D *get_texture(const std::string &name) {
+std::optional<std::reference_wrapper<const core::Texture2D>> get_texture(
+    const std::string &name) {
     const auto iter{textures.find(name)};
-    ASSERT_RET_MSG(iter != textures.end(), nullptr, "texture '%s' not found",
-                   name.c_str());
-    return iter->second;
+    ASSERT_RET_MSG(iter != textures.end(), std::nullopt,
+                   "texture '%s' not found", name.c_str());
+    return std::cref(*iter->second);
 }
 
 bool remove_texture(const std::string &name) {
@@ -45,15 +49,11 @@ bool remove_texture(const std::string &name) {
         return false;
     }
     textures.erase(iter);
-    delete iter->second;
     return true;
 }
 
 void destroy() {
     spdlog::trace("clearing all resources");
-    for (const auto &iter : textures) {
-        delete iter.second;
-    }
     textures.clear();
 }
 }  // namespace explore::managers::resource
