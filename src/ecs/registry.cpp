@@ -13,11 +13,11 @@ void Registry::update() {
     _entities_add_queue.clear();
 }
 
-Entity Registry::create_entity() { return create_entity(_default_entity_name); }
+Entity Registry::create_entity() { return create_entity(default_entity_name); }
 
-Entity Registry::create_entity(const std::string_view &name) {
+Entity Registry::create_entity(const std::string_view entity_name) {
     const u32 entity_id{_entity_count++};
-    Entity entity{entity_id};
+    Entity entity{entity_id, entity_name};
 
     _entities_add_queue.insert(entity);
 
@@ -25,7 +25,7 @@ Entity Registry::create_entity(const std::string_view &name) {
         _entity_comp_signatures.resize(entity_id + 1);
     }
 
-    spdlog::trace("entity added: name->'{}' id->'{}'", name, entity_id);
+    spdlog::trace("entity added: id->'{}' name->'{}'", entity_id, entity_name);
 
     return entity;
 }

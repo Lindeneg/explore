@@ -12,6 +12,10 @@ u32 BaseComponent::_next_id{0};
 
 u32 Entity::get_id() const { return _id; }
 
+const std::string &Entity::get_name() const { return _name; }
+
+void Entity::set_name(const std::string_view name) { _name = name; }
+
 bool Entity::operator==(const Entity &other) const { return _id == other._id; }
 
 bool Entity::operator!=(const Entity &other) const { return _id != other._id; }

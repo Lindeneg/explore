@@ -5,6 +5,7 @@
 #include <spdlog/spdlog.h>
 
 #include "../common.h"
+#include "../components/transform.h"
 #include "../core/context.h"
 #include "../ecs/registry.h"
 #include "./resource_manager.h"
@@ -24,16 +25,10 @@ bool explore::managers::game::initialize() {
 }
 
 void explore::managers::game::setup() {
-    ecs::Entity tank{registry.create_entity("truck")};
-    ecs::Entity truck{registry.create_entity("tank")};
-    ecs::Entity truck2{registry.create_entity()};
-    //        tank.add_component<component::Transform>();
-    //        tank.add_component<component::BoxCollider>();
-    //        tank.add_component<component::Sprite>(
-    //            FPATH("assets", "images", "tank-tiger-right.png"), 32, 32);
-    //        resource::add_texture(
-    //            "tank", FPATH("assets", "images", "tank-tiger-right.png"), 32,
-    //            32);
+    ecs::Entity tank{registry.create_entity("tank")};
+    registry.add_component<component::Transform>(tank, glm::vec2(10.0f, 30.0f),
+                                                 glm::vec2(1.0f, 1.0f), 0.0);
+    //    registry.add_component<component::RigidBody>(tank);
 }
 
 void explore::managers::game::load_level(const u32 level) {}

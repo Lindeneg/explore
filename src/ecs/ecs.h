@@ -2,6 +2,7 @@
 #define EXPLORE_ECS_ECS_H_
 
 #include <bitset>
+#include <string_view>
 #include <vector>
 
 #include "../common.h"
@@ -34,12 +35,16 @@ class Component : public BaseComponent {
 class Entity {
    private:
     u32 _id;
+    std::string _name;
 
    public:
-    Entity(u32 id) : _id(id) {}
+    Entity(u32 id, std::string_view name) : _id(id), _name(name) {}
 
    public:
     [[nodiscard]] u32 get_id() const;
+    [[nodiscard]] const std::string &get_name() const;
+
+    void set_name(const std::string_view name);
 
     bool operator==(const Entity &other) const;
     bool operator!=(const Entity &other) const;

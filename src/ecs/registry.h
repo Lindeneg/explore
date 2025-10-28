@@ -15,7 +15,7 @@ namespace explore::ecs::registry {
 
 class Registry {
    private:
-    constexpr static const std::string_view _default_entity_name = "default";
+    constexpr static const std::string_view default_entity_name = "default";
 
     u32 _entity_count{0};
 
@@ -38,7 +38,7 @@ class Registry {
     void update();
 
     Entity create_entity();
-    Entity create_entity(const std::string_view &name);
+    Entity create_entity(const std::string_view name);
 
     void add_entity_to_systems(Entity entity);
 
