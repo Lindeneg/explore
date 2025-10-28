@@ -6,12 +6,14 @@
 
 #include "../common.h"
 #include "../core/context.h"
+#include "../ecs/registry.h"
 #include "./resource_manager.h"
 #include "./screen_manager.h"
 
 static bool is_running{false};
 static SDL_Event event{};
 static explore::core::GameContext game_context{};
+static explore::ecs::registry::Registry registry{};
 
 bool explore::managers::game::initialize() {
     if (!screen::initialize()) {
@@ -22,14 +24,16 @@ bool explore::managers::game::initialize() {
 }
 
 void explore::managers::game::setup() {
-    //    ecs::Entity tank{registry.create_entity()};
-    //    tank.add_component<component::Transform>();
-    //    tank.add_component<component::BoxCollider>();
-    //    tank.add_component<component::Sprite>(
-    //        FPATH("assets", "images", "tank-tiger-right.png"), 32, 32);
-    //    resource::add_texture(
-    //        "tank", FPATH("assets", "images", "tank-tiger-right.png"), 32,
-    //        32);
+    ecs::Entity tank{registry.create_entity("truck")};
+    ecs::Entity truck{registry.create_entity("tank")};
+    ecs::Entity truck2{registry.create_entity()};
+    //        tank.add_component<component::Transform>();
+    //        tank.add_component<component::BoxCollider>();
+    //        tank.add_component<component::Sprite>(
+    //            FPATH("assets", "images", "tank-tiger-right.png"), 32, 32);
+    //        resource::add_texture(
+    //            "tank", FPATH("assets", "images", "tank-tiger-right.png"), 32,
+    //            32);
 }
 
 void explore::managers::game::load_level(const u32 level) {}

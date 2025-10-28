@@ -95,6 +95,7 @@ add_executable(ExploreApp
         src/managers/game_manager.cpp
         src/managers/resource_manager.cpp
         src/ecs/ecs.cpp
+        src/ecs/registry.cpp
 )
 
 add_custom_command(TARGET ExploreApp POST_BUILD
