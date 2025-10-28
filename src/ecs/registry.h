@@ -20,7 +20,7 @@ class Registry {
     u32 _entity_count{0};
 
     // each pool contains all data for a certain component type
-    std::vector<explore::ecs::IPool *> _comp_pools;
+    std::vector<std::shared_ptr<explore::ecs::IPool>> _comp_pools;
     // vector of component signatures, the signature lets us know
     // which components are turned on for an entity
     std::vector<explore::ecs::Signature> _entity_comp_signatures;
@@ -28,7 +28,8 @@ class Registry {
     std::set<explore::ecs::Entity> _entities_add_queue;
     std::set<explore::ecs::Entity> _entities_kill_queue;
 
-    std::unordered_map<std::type_index, explore::ecs::System *> _systems;
+    std::unordered_map<std::type_index, std::shared_ptr<explore::ecs::System>>
+        _systems;
 
    public:
     Registry() = default;
@@ -78,11 +79,13 @@ void Registry::add_component(Entity entity, TArgs &&...args) {
     }
 
     if (!_comp_pools[component_id]) {
-        auto *new_pool = new Pool<TComponent>();
+        std::shared_ptr<Pool<TComponent>> new_pool =
+            std::make_shared<Pool<TComponent>>();
         _comp_pools[component_id] = new_pool;
     }
 
-    Pool<TComponent> *comp_pool{_comp_pools[component_id]};
+    std::shared_ptr<Pool<TComponent>> comp_pool{
+        std::static_pointer_cast<Pool<TComponent>>(_comp_pools[component_id])};
 
     if (entity_id >= comp_pool->size()) {
         comp_pool->resize(_entity_count);
@@ -119,7 +122,8 @@ TComponent &Registry::get_component(Entity entity) {
 
 template <typename TSystem, typename... TArgs>
 void Registry::add_system(TArgs &&...args) {
-    TSystem *new_system{new TSystem(std::forward<TArgs>(args)...)};
+    std::shared_ptr<TSystem> new_system{
+        std::make_shared<TSystem>(std::forward<TArgs>(args)...)};
     _systems.insert(
         std::make_pair(std::type_index(typeid(TSystem)), new_system));
 }
@@ -138,6 +142,9 @@ bool Registry::has_system() {
 template <typename TSystem>
 TSystem &Registry::get_system() {
     auto system{_systems.find(std::type_index(typeid(TSystem)))};
+    // TODO: what if the system isn't found? maybe reference is wrong here
+    // std::optional could be better inside a std::reference_wrapper
+    // then return std::nullopt if system is not found
     return *(std::static_pointer_cast<TSystem>(system->second));
 }
 
