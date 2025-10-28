@@ -1,10 +1,13 @@
 #ifndef EXPLORE_ECS_REGISTRY_H_
 #define EXPLORE_ECS_REGISTRY_H_
 
+#include <spdlog/spdlog.h>
+
 #include <memory>
 #include <set>
 #include <string_view>
 #include <typeindex>
+#include <typeinfo>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -95,6 +98,9 @@ void Registry::add_component(Entity entity, TArgs &&...args) {
 
     comp_pool->set(entity_id, component);
     _entity_comp_signatures[entity_id].set(component_id, true);
+
+    spdlog::trace("added component '{}:{}' to entity '{}:{}'", component_id,
+                  typeid(TComponent).name(), entity_id, entity.get_name());
 }
 
 template <typename TComponent>

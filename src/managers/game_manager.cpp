@@ -5,8 +5,8 @@
 #include <spdlog/spdlog.h>
 
 #include "../common.h"
-#include "../components/transform.h"
 #include "../core/context.h"
+#include "../ecs/components.h"
 #include "../ecs/registry.h"
 #include "./resource_manager.h"
 #include "./screen_manager.h"
@@ -28,7 +28,7 @@ void explore::managers::game::setup() {
     ecs::Entity tank{registry.create_entity("tank")};
     registry.add_component<component::Transform>(tank, glm::vec2(10.0f, 30.0f),
                                                  glm::vec2(1.0f, 1.0f), 0.0);
-    //    registry.add_component<component::RigidBody>(tank);
+    registry.add_component<component::RigidBody>(tank, glm::vec2(50.0f, 0.0));
 }
 
 void explore::managers::game::load_level(const u32 level) {}

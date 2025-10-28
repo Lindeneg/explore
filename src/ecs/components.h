@@ -1,5 +1,5 @@
-#ifndef EXPLORE_COMPONENTS_TRANSFORM_H_
-#define EXPLORE_COMPONENTS_TRANSFORM_H_
+#ifndef EXPLORE_ECS_COMPONENTS_H_
+#define EXPLORE_ECS_COMPONENTS_H_
 
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
@@ -7,6 +7,7 @@
 #include "../common.h"
 
 namespace explore::component {
+
 struct Transform {
     glm::vec2 position;
     glm::vec2 scale;
@@ -16,6 +17,12 @@ struct Transform {
               f64 rotation = 0.0)
         : position(position), scale(scale), rotation(rotation) {}
 };
+
+struct RigidBody {
+    glm::vec2 velocity;
+
+    RigidBody(glm::vec2 velocity = {0, 0}) : velocity(velocity) {}
+};
 }  // namespace explore::component
 
-#endif  // EXPLORE_COMPONENTS_TRANSFORM_H_
+#endif  // EXPLORE_ECS_COMPONENTS_H_
