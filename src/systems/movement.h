@@ -3,10 +3,6 @@
 
 #include "../ecs/ecs.h"
 
-namespace explore::core {
-class GameContext;
-}
-
 namespace explore::system {
 class Movement : public ecs::System {
    public:
