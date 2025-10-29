@@ -8,11 +8,20 @@ namespace explore::ecs {
 
 u32 BaseComponent::_next_id{0};
 
-// ENTITY IMPLEMENTATION //
+//////////////////////////////////////
+//////////////////////////////////////
+////////////// ENTITY ////////////////
+//////////////////////////////////////
+//////////////////////////////////////
+
+Entity::Entity(u32 id, std::string_view name, Registry *registry)
+    : _id(id), _name(name), _registry(registry) {}
 
 u32 Entity::get_id() const { return _id; }
 
 const std::string &Entity::get_name() const { return _name; }
+
+Registry *Entity::get_registry() const { return _registry; }
 
 void Entity::set_name(const std::string_view name) { _name = name; }
 
@@ -24,7 +33,11 @@ bool Entity::operator<(const Entity &other) const { return _id < other._id; }
 
 bool Entity::operator>(const Entity &other) const { return _id > other._id; }
 
-// SYSTEM IMPLEMENTATION //
+//////////////////////////////////////
+//////////////////////////////////////
+////////////// SYSTEM ////////////////
+//////////////////////////////////////
+//////////////////////////////////////
 
 void System::add_entity(Entity entity) { _entities.push_back(entity); }
 
@@ -46,6 +59,54 @@ const std::vector<Entity> &System::get_entities() const { return _entities; }
 const Signature &System::get_comp_signature() const {
     return _component_signature;
 }
+
+//////////////////////////////////////
+//////////////////////////////////////
+///////////// REGISTRY ///////////////
+//////////////////////////////////////
+//////////////////////////////////////
+
+void Registry::update() {
+    for (auto entity : _entities_add_queue) {
+        add_entity_to_systems(entity);
+    }
+    _entities_add_queue.clear();
+}
+
+Entity Registry::create_entity() { return create_entity(default_entity_name); }
+
+Entity Registry::create_entity(const std::string_view entity_name) {
+    const u32 entity_id{_entity_count++};
+    Entity entity{entity_id, entity_name, this};
+
+    _entities_add_queue.insert(entity);
+
+    if (entity_id >= _entity_comp_signatures.size()) {
+        _entity_comp_signatures.resize(entity_id + 1);
+    }
+
+    spdlog::trace("entity added: id->'{}' name->'{}'", entity_id, entity_name);
+
+    return entity;
+}
+
+void Registry::add_entity_to_systems(Entity entity) {
+    const auto entity_id{entity.get_id()};
+    const auto &entity_comp_signature{_entity_comp_signatures[entity_id]};
+
+    for (auto &system : _systems) {
+        const auto &system_comp_signature{system.second->get_comp_signature()};
+        bool system_interested_in_entity{
+            (entity_comp_signature & system_comp_signature) ==
+            system_comp_signature};
+
+        if (system_interested_in_entity) {
+            system.second->add_entity(entity);
+        }
+    }
+}
+
+void Registry::kill_entity() {}
 
 }  // namespace explore::ecs
 

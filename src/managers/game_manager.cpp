@@ -7,14 +7,14 @@
 #include "../common.h"
 #include "../core/context.h"
 #include "../ecs/components.h"
-#include "../ecs/registry.h"
+#include "../ecs/ecs.h"
 #include "./resource_manager.h"
 #include "./screen_manager.h"
 
 static bool is_running{false};
 static SDL_Event event{};
 static explore::core::GameContext game_context{};
-static explore::ecs::registry::Registry registry{};
+static explore::ecs::Registry registry{};
 
 bool explore::managers::game::initialize() {
     if (!screen::initialize()) {
@@ -26,9 +26,9 @@ bool explore::managers::game::initialize() {
 
 void explore::managers::game::setup() {
     ecs::Entity tank{registry.create_entity("tank")};
-    registry.add_component<component::Transform>(tank, glm::vec2(10.0f, 30.0f),
-                                                 glm::vec2(1.0f, 1.0f), 0.0);
-    registry.add_component<component::RigidBody>(tank, glm::vec2(50.0f, 0.0));
+    //    tank.add_component<component::Transform>(glm::vec2(10.0f, 30.0f),
+    //                                             glm::vec2(1.0f, 1.0f), 0.0);
+    //    tank.add_component<component::RigidBody>(glm::vec2(50.0f, 0.0));
 }
 
 void explore::managers::game::load_level(const u32 level) {}
