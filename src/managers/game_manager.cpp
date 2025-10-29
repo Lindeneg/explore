@@ -8,6 +8,7 @@
 #include "../core/context.h"
 #include "../ecs/components.h"
 #include "../ecs/ecs.h"
+#include "../systems/movement.h"
 #include "./resource_manager.h"
 #include "./screen_manager.h"
 
@@ -25,12 +26,12 @@ bool explore::managers::game::initialize() {
 }
 
 void explore::managers::game::setup() {
+    registry.add_system<system::Movement>();
+
     ecs::Entity tank{registry.create_entity("tank")};
     tank.add_component<component::Transform>(glm::vec2(10.0f, 30.0f),
                                              glm::vec2(1.0f, 1.0f), 0.0);
     tank.add_component<component::RigidBody>(glm::vec2(50.0f, 0.0));
-
-    tank.remove_component<component::Transform>();
 }
 
 void explore::managers::game::load_level(const u32 level) {}
@@ -65,7 +66,13 @@ void explore::managers::game::process_input() {
     }
 }
 
-void explore::managers::game::update() { game_context.update_delta_time(); }
+void explore::managers::game::update() {
+    game_context.update_delta_time();
+
+    registry.get_system<system::Movement>().update(game_context.delta_time);
+
+    registry.update();
+}
 
 void explore::managers::game::render() {
     screen::set_draw_color(color::black);

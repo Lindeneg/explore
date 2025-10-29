@@ -1,11 +1,18 @@
 #ifndef EXPLORE_SYSTEMS_MOVEMENT_H_
 #define EXPLORE_SYSTEMS_MOVEMENT_H_
 
-namespace explore::system {
-class Movement /* : public System*/ {
-    Movement() {}
+#include "../ecs/ecs.h"
 
-    void update();
+namespace explore::core {
+class GameContext;
+}
+
+namespace explore::system {
+class Movement : public ecs::System {
+   public:
+    Movement();
+
+    void update(f32 delta_time);
 };
 }  // namespace explore::system
 
