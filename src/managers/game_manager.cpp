@@ -29,6 +29,8 @@ void explore::managers::game::setup() {
     tank.add_component<component::Transform>(glm::vec2(10.0f, 30.0f),
                                              glm::vec2(1.0f, 1.0f), 0.0);
     tank.add_component<component::RigidBody>(glm::vec2(50.0f, 0.0));
+
+    tank.remove_component<component::Transform>();
 }
 
 void explore::managers::game::load_level(const u32 level) {}
