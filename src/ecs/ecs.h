@@ -48,7 +48,9 @@ class Component : public BaseComponent {
 class Entity {
    private:
     u32 _id;
+    // TODO: store away from entity and instead just save an index
     std::string _name;
+    // TODO: maybe make into reference instead
     class Registry *_registry;
 
    public:
@@ -65,6 +67,18 @@ class Entity {
     bool operator!=(const Entity &other) const;
     bool operator<(const Entity &other) const;
     bool operator>(const Entity &other) const;
+
+    template <typename TComponent, typename... TArgs>
+    void add_component(TArgs &&...args);
+
+    template <typename TComponent>
+    void remove_component();
+
+    template <typename TComponent>
+    TComponent &get_component() const;
+
+    template <typename TComponent>
+    bool has_component() const;
 };
 
 //////////////////////////////////////
@@ -242,8 +256,8 @@ template <typename TComponent>
 TComponent &Registry::get_component(Entity entity) {
     const auto component_id{Component<TComponent>::get_id()};
     const auto entity_id{entity.get_id()};
-    const Pool<TComponent> &pool{_comp_pools[component_id]};
-    return pool[entity_id];
+    Pool<TComponent> &pool{_comp_pools[component_id]};
+    return pool.get(entity_id);
 }
 
 template <typename TSystem, typename... TArgs>
@@ -272,6 +286,30 @@ TSystem &Registry::get_system() {
     // std::optional could be better inside a std::reference_wrapper
     // then return std::nullopt if system is not found
     return *(std::static_pointer_cast<TSystem>(system->second));
+}
+
+template <typename TComponent, typename... TArgs>
+void Entity::add_component(TArgs &&...args) {
+    ASSERT_RET_V_MSG(_registry, "registry is null");
+    _registry->add_component<TComponent>(*this, args...);
+}
+
+template <typename TComponent>
+void Entity::remove_component() {
+    ASSERT_RET_V_MSG(_registry, "registry is null");
+    _registry->remove_component<TComponent>(*this);
+}
+
+template <typename TComponent>
+TComponent &Entity::get_component() const {
+    ASSERT_RET_V_MSG(_registry, "registry is null");
+    return _registry->get_component<TComponent>(*this);
+}
+
+template <typename TComponent>
+bool Entity::has_component() const {
+    ASSERT_RET_MSG(_registry, false, "registry is null");
+    return _registry->has_component<TComponent>(*this);
 }
 
 }  // namespace explore::ecs
