@@ -104,6 +104,8 @@ class System {
 
     template <typename TComponent>
     void require_component();
+
+    virtual void update(f32 delta_time) {}
 };
 
 template <typename TComponent>
@@ -259,8 +261,9 @@ template <typename TComponent>
 TComponent &Registry::get_component(Entity entity) {
     const auto component_id{Component<TComponent>::get_id()};
     const auto entity_id{entity.get_id()};
-    Pool<TComponent> &pool{_comp_pools[component_id]};
-    return pool.get(entity_id);
+    auto pool =
+        std::static_pointer_cast<Pool<TComponent>>(_comp_pools[component_id]);
+    return pool->get(entity_id);
 }
 
 template <typename TSystem, typename... TArgs>
@@ -305,7 +308,7 @@ void Entity::remove_component() {
 
 template <typename TComponent>
 TComponent &Entity::get_component() const {
-    ASSERT_RET_V_MSG(_registry, "registry is null");
+    ASSERT_MSG(_registry, "registry is null");
     return _registry->get_component<TComponent>(*this);
 }
 
