@@ -243,6 +243,9 @@ void Registry::remove_component(Entity entity) {
     const auto entity_id{entity.get_id()};
 
     _entity_comp_signatures[entity_id].set(component_id, false);
+
+    spdlog::trace("removed component '{}:{}' from entity '{}:{}'", component_id,
+                  typeid(TComponent).name(), entity_id, entity.get_name());
 }
 
 template <typename TComponent>
@@ -291,7 +294,7 @@ TSystem &Registry::get_system() {
 template <typename TComponent, typename... TArgs>
 void Entity::add_component(TArgs &&...args) {
     ASSERT_RET_V_MSG(_registry, "registry is null");
-    _registry->add_component<TComponent>(*this, args...);
+    _registry->add_component<TComponent>(*this, std::forward<TArgs>(args)...);
 }
 
 template <typename TComponent>
