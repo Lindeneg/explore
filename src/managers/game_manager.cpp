@@ -44,7 +44,7 @@ void explore::managers::game::setup() {
 
     tank.add_component<component::RigidBody>(glm::vec2(25.f, 25.f));
 
-    tank.add_component<component::Sprite>("tank", 64u, 64u);
+    tank.add_component<component::Sprite>("tank");
 }
 
 void explore::managers::game::load_level(const u32 level) {}

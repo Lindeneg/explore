@@ -46,11 +46,15 @@ bool remove_texture(const std::string &name) {
         return false;
     }
     textures.erase(iter);
+    delete iter->second;
     return true;
 }
 
 void destroy() {
     spdlog::trace("clearing all resources");
+    for (auto tex : textures) {
+        delete tex.second;
+    };
     textures.clear();
 }
 }  // namespace explore::managers::resource
