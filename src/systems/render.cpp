@@ -4,6 +4,7 @@
 
 #include "../core/game_context.h"
 #include "../ecs/components.h"
+#include "../managers/resource_manager.h"
 #include "../managers/screen_manager.h"
 
 namespace explore::system {
@@ -18,12 +19,13 @@ void Render::update(const core::GameContext &game_context) {
         const auto transform = entity.get_component<component::Transform>();
         const auto sprite{entity.get_component<component::Sprite>()};
 
-        SDL_Rect rect{static_cast<int>(transform.position.x),
-                      static_cast<int>(transform.position.y),
-                      static_cast<int>(sprite.width),
-                      static_cast<int>(sprite.height)};
+        auto opt_texture{managers::resource::get_texture(sprite.texture_name)};
+        ASSERT_RET_V(opt_texture.has_value());
+        auto texture{opt_texture.value()};
 
-        managers::screen::draw_rect(rect);
+        managers::screen::draw_texture(
+            *texture,
+            sdl::rect(transform.position, sprite.width, sprite.height));
     }
 }
 
