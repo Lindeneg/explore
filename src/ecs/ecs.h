@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "../common.h"
+#include "../core/context.h"
 
 static constexpr u32 MAX_COMPONENTS{32};
 
@@ -106,6 +107,7 @@ class System {
     void require_component();
 
     virtual void update(f32 delta_time) {}
+    virtual void update(const core::GameContext &game_context) {}
 };
 
 template <typename TComponent>
