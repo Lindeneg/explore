@@ -6,6 +6,7 @@
 #include <spdlog/spdlog.h>
 
 #include "../common.h"
+#include "../core/file.h"
 #include "../core/game_context.h"
 #include "../ecs/components.h"
 #include "../ecs/ecs.h"
@@ -31,6 +32,9 @@ void explore::managers::game::setup() {
     game_context.capped_frame_rate = true;
     game_context.sample_fps = true;
 
+    resource::add_texture(
+        "tank", FPATH("assets", "images", "tank-panther-right.png"), 32, 32);
+
     registry.add_system<system::Movement>();
     registry.add_system<system::Render>();
 
@@ -40,15 +44,7 @@ void explore::managers::game::setup() {
 
     tank.add_component<component::RigidBody>(glm::vec2(25.f, 25.f));
 
-    tank.add_component<component::Sprite>(50u, 50u);
-
-    ecs::Entity truck{registry.create_entity("truck")};
-    truck.add_component<component::Transform>(glm::vec2(500.f, 500.f),
-                                              glm::vec2(1.f, 1.f), 0.f);
-
-    truck.add_component<component::RigidBody>(glm::vec2(-10.f, -25.f));
-
-    truck.add_component<component::Sprite>(35u, 25u);
+    tank.add_component<component::Sprite>("tank", 64u, 64u);
 }
 
 void explore::managers::game::load_level(const u32 level) {}
@@ -59,7 +55,7 @@ void explore::managers::game::run() {
         process_input();
         update();
         render();
-        spdlog::debug("FPS:{}", game_context.FPS());
+        //        spdlog::debug("FPS:{}", game_context.FPS());
     }
 }
 

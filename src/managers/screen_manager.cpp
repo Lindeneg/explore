@@ -86,28 +86,19 @@ void explore::managers::screen::draw_rect(const SDL_Rect &dst,
     SDL_RenderFillRect(renderer, &dst);
 }
 
-void explore::managers::screen::draw_texture(const std::string &name,
+void explore::managers::screen::draw_texture(const core::Texture2D &tex,
                                              SDL_Rect dst) {
     ASSERT_RET_V(renderer);
-
-    auto opt_texture{resource::get_texture(name)};
-    ASSERT_RET_V(opt_texture);
-    auto texture{opt_texture->get()};
-
-    FILL_RECT(texture, dst)
-    SDL_RenderCopy(renderer, texture.get_data(), nullptr, &dst);
+    FILL_RECT(tex, dst)
+    SDL_RenderCopy(renderer, tex.get_data(), nullptr, &dst);
 }
 
-void explore::managers::screen::draw_texture(const std::string &name,
+void explore::managers::screen::draw_texture(const core::Texture2D &tex,
                                              SDL_Rect src, SDL_Rect dst) {
     ASSERT_RET_V(renderer);
-    auto opt_texture{resource::get_texture(name)};
-    ASSERT_RET_V(opt_texture);
-    auto texture{opt_texture->get()};
-
-    FILL_RECT(texture, src)
-    FILL_RECT(texture, dst)
-    SDL_RenderCopy(renderer, texture.get_data(), &src, &dst);
+    FILL_RECT(tex, src)
+    FILL_RECT(tex, dst)
+    SDL_RenderCopy(renderer, tex.get_data(), &src, &dst);
 }
 
 void explore::managers::screen::clear() {

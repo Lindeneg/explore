@@ -15,8 +15,7 @@ namespace explore::managers::resource {
 bool add_texture(const std::string &name, const std::filesystem::path &path,
                  u32 width, u32 height);
 
-std::optional<std::reference_wrapper<const core::Texture2D>> get_texture(
-    const std::string &name);
+std::optional<const core::Texture2D *> get_texture(const std::string &name);
 
 bool remove_texture(const std::string &name);
 

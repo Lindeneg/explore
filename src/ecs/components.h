@@ -3,6 +3,7 @@
 
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
+#include <string>
 
 #include "../common.h"
 
@@ -27,8 +28,11 @@ struct RigidBody {
 struct Sprite {
     u32 width;
     u32 height;
+    std::string texture_name;
 
-    Sprite(u32 width = 0, u32 height = 0) : width(width), height(height) {}
+    // TODO: do not take a string
+    Sprite(std::string texture_name = "", u32 width = 0, u32 height = 0)
+        : texture_name(texture_name), width(width), height(height) {}
 };
 
 }  // namespace explore::component
