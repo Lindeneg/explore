@@ -2,6 +2,9 @@
 #define EXPLORE_COMMON_H
 
 #include <SDL2/SDL_pixels.h>
+#include <SDL_rect.h>
+
+#include <glm/glm.hpp>
 
 typedef int8_t i8;
 typedef int16_t i16;
@@ -87,7 +90,7 @@ namespace explore::constants {
 constexpr i32 FPS{120};
 
 /* target time in ms for each frame */
-constexpr f64 FRAME_TARGET{1000 / FPS};
+constexpr f64 FRAME_TARGET{1000.f / FPS};
 
 /* maximum delta time (useful if running in debugger) */
 constexpr f64 MAXIMUM_DT{0.05f};
@@ -117,4 +120,21 @@ constexpr Color dark_red{139, 0, 0, 255};
 constexpr Color dark_green{0, 100, 0, 255};
 constexpr Color dark_blue{0, 0, 139, 255};
 }  // namespace explore::color
+
+namespace explore::sdl {
+inline SDL_Rect rect(f32 x, f32 y, u32 w, u32 h) {
+    SDL_Rect r{
+        static_cast<int>(x),
+        static_cast<int>(y),
+        static_cast<int>(w),
+        static_cast<int>(h),
+    };
+    return r;
+}
+
+inline SDL_Rect rect(glm::vec2 pos, u32 w, u32 h) {
+    return rect(pos.x, pos.y, w, h);
+}
+}  // namespace explore::sdl
+
 #endif  // EXPLORE_COMMON_H
