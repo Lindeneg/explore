@@ -14,6 +14,8 @@ bool initialize();
 
 void set_draw_color(Color color);
 
+void draw_rect(const SDL_Rect &dst, const Color color = color::white);
+
 void draw_texture(const std::string &name, SDL_Rect dst);
 
 void draw_texture(const std::string &name, SDL_Rect src, SDL_Rect dst);

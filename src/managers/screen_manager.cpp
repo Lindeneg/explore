@@ -79,6 +79,13 @@ void explore::managers::screen::set_draw_color(const Color color) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
 
+void explore::managers::screen::draw_rect(const SDL_Rect &dst,
+                                          const Color color) {
+    ASSERT_RET_V(renderer);
+    set_draw_color(color);
+    SDL_RenderFillRect(renderer, &dst);
+}
+
 void explore::managers::screen::draw_texture(const std::string &name,
                                              SDL_Rect dst) {
     ASSERT_RET_V(renderer);
