@@ -1,7 +1,5 @@
 #include "movement.h"
 
-#include <spdlog/spdlog.h>
-
 #include "../ecs/components.h"
 
 namespace explore::system {
@@ -17,8 +15,6 @@ void Movement::update(f32 delta_time) {
         const auto rb{entity.get_component<component::RigidBody>()};
 
         transform.position += (rb.velocity * delta_time);
-
-        spdlog::trace("X:{}, Y:{}", transform.position.x, transform.position.y);
     }
 }
 }  // namespace explore::system
