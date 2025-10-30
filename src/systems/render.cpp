@@ -2,7 +2,7 @@
 
 #include <SDL_rect.h>
 
-#include "../core/context.h"
+#include "../core/game_context.h"
 #include "../ecs/components.h"
 #include "../managers/screen_manager.h"
 

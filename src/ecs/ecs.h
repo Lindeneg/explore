@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "../common.h"
-#include "../core/context.h"
+#include "../core/game_context.h"
 
 static constexpr u32 MAX_COMPONENTS{32};
 
