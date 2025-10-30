@@ -100,6 +100,7 @@ add_executable(ExploreApp
         src/ecs/ecs.cpp
 
         src/systems/movement.cpp
+        src/systems/render.cpp
 )
 
 add_custom_command(TARGET ExploreApp POST_BUILD
