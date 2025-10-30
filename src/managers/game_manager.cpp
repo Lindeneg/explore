@@ -29,6 +29,7 @@ bool explore::managers::game::initialize() {
 
 void explore::managers::game::setup() {
     game_context.capped_frame_rate = true;
+    game_context.sample_fps = true;
 
     registry.add_system<system::Movement>();
     registry.add_system<system::Render>();
@@ -58,7 +59,7 @@ void explore::managers::game::run() {
         process_input();
         update();
         render();
-        //        spdlog::debug("FPS:{}", game_context.FPS());
+        spdlog::debug("FPS:{}", game_context.FPS());
     }
 }
 
@@ -85,7 +86,6 @@ void explore::managers::game::process_input() {
 
 void explore::managers::game::update() {
     game_context.update_delta_time();
-    spdlog::debug("DT:{}, FPS:{}", game_context.delta_time, game_context.FPS());
 
     registry.get_system<system::Movement>().update(game_context.delta_time);
 
