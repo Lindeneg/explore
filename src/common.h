@@ -84,13 +84,13 @@ namespace explore::constants {
 // TODO maybe move target FPS and frame target to configuration
 
 /* target FPS for fixed updates */
-constexpr i32 FPS{60};
+constexpr i32 FPS{120};
 
 /* target time in ms for each frame */
-constexpr i32 FRAME_TARGET{1000 / FPS};
+constexpr f64 FRAME_TARGET{1000 / FPS};
 
 /* maximum delta time (useful if running in debugger) */
-constexpr f32 MAXIMUM_DT{0.05f};
+constexpr f64 MAXIMUM_DT{0.05f};
 
 }  // namespace explore::constants
 

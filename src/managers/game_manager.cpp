@@ -2,10 +2,11 @@
 
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_image.h>
+#include <SDL_timer.h>
 #include <spdlog/spdlog.h>
 
 #include "../common.h"
-#include "../core/context.h"
+#include "../core/game_context.h"
 #include "../ecs/components.h"
 #include "../ecs/ecs.h"
 #include "../systems/movement.h"
@@ -27,6 +28,9 @@ bool explore::managers::game::initialize() {
 }
 
 void explore::managers::game::setup() {
+    game_context.capped_frame_rate = true;
+    game_context.sample_fps = true;
+
     registry.add_system<system::Movement>();
     registry.add_system<system::Render>();
 
@@ -34,7 +38,7 @@ void explore::managers::game::setup() {
     tank.add_component<component::Transform>(glm::vec2(10.f, 30.f),
                                              glm::vec2(1.f, 1.f), 0.f);
 
-    tank.add_component<component::RigidBody>(glm::vec2(10.f, 25.f));
+    tank.add_component<component::RigidBody>(glm::vec2(25.f, 25.f));
 
     tank.add_component<component::Sprite>(50u, 50u);
 
@@ -55,6 +59,7 @@ void explore::managers::game::run() {
         process_input();
         update();
         render();
+        spdlog::debug("FPS:{}", game_context.FPS());
     }
 }
 
