@@ -15,6 +15,20 @@ Render::Render() {
     require_component<component::Sprite>();
 }
 
+void Render::add_entity(ecs::Entity entity) {
+    spdlog::debug("RENDER ADD ENTITY {}", entity.get_name());
+
+    int z = entity.get_component<component::Sprite>().z_index;
+
+    auto it = std::lower_bound(
+        _entities.begin(), _entities.end(), z,
+        [&](const ecs::Entity &e, int z_value) {
+            return e.get_component<component::Sprite>().z_index < z_value;
+        });
+
+    _entities.insert(it, entity);
+}
+
 void Render::update(const core::GameContext &game_context) {
     for (const auto &entity : get_entities()) {
         const auto transform = entity.get_component<component::Transform>();
