@@ -3,4 +3,13 @@ ENTITY:
 - dont store strings in instances, store in map, save index in struct
 - dont take registry raw pointer, take reference and then implement copy/move
 
+Managers:
 
+- re-createto class
+
+Resource:
+- think about int ids or hashes or hashes
+
+General:
+- create tilemap component
+- craete tilemap system
