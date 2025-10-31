@@ -35,8 +35,14 @@ void explore::managers::game::setup() {
     resource::add_texture(
         "tank", FPATH("assets", "images", "tank-panther-right.png"), 32, 32);
 
+    resource::add_texture("tile-map", FPATH("assets", "tilemaps", "jungle.png"),
+                          320, 96);
+
     registry.add_system<system::Movement>();
     registry.add_system<system::Render>();
+
+    resource::load_tilemap(FPATH("assets", "tilemaps", "jungle.map"),
+                           "tile-map", 32, 32, registry);
 
     ecs::Entity tank{registry.create_entity("tank")};
     tank.add_component<component::Transform>(glm::vec2(10.f, 10.f),
