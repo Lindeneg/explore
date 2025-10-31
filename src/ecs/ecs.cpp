@@ -39,18 +39,24 @@ bool Entity::operator>(const Entity &other) const { return _id > other._id; }
 //////////////////////////////////////
 //////////////////////////////////////
 
-void System::add_entity(Entity entity) { _entities.push_back(entity); }
+void System::add_entity(Entity entity) {
+    spdlog::debug("DEFAULT ADD ENTITY {}", entity.get_name());
+    _entities.push_back(entity);
+}
 
 bool System::remove_entity(Entity entity) {
-    auto iter{
-        std::remove_if(_entities.begin(), _entities.end(),
-                       [&entity](Entity other) { return entity == other; })};
-    if (iter == _entities.end()) {
-        spdlog::warn("tried to remove non-existent entity {0:d} from registry",
+    u64 old_size{_entities.size()};
+
+    auto new_end{std::remove_if(_entities.begin(), _entities.end(),
+                                [&](Entity other) { return entity == other; })};
+
+    if (new_end == _entities.end() && old_size == _entities.size()) {
+        spdlog::warn("tried to remove non-existent entity {} from system",
                      entity.get_id());
         return false;
     }
-    _entities.erase(iter, _entities.end());
+
+    _entities.erase(new_end, _entities.end());
     return true;
 }
 

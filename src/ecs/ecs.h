@@ -91,20 +91,22 @@ class Entity {
 class System {
    private:
     Signature _component_signature;
+
+   protected:
     std::vector<Entity> _entities;
 
    public:
     System() = default;
     ~System() = default;
 
-    void add_entity(Entity entity);
-    bool remove_entity(Entity entity);
-
     const std::vector<Entity> &get_entities() const;
     const Signature &get_comp_signature() const;
 
     template <typename TComponent>
     void require_component();
+
+    virtual void add_entity(Entity entity);
+    virtual bool remove_entity(Entity entity);
 
     virtual void update(f32 delta_time) {}
     virtual void update(const core::GameContext &game_context) {}
