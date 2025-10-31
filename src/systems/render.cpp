@@ -34,7 +34,9 @@ void Render::update(const core::GameContext &game_context) {
         scaled_h = static_cast<u32>(scaled_h * transform.scale.y);
 
         managers::screen::draw_texture(
-            *texture, sdl::rect(transform.position, scaled_w, scaled_h));
+            *texture, sprite.src_rect,
+            sdl::rect(transform.position, scaled_w, scaled_h),
+            transform.rotation);
     }
 }
 

@@ -26,13 +26,20 @@ struct RigidBody {
 };
 
 struct Sprite {
-    u32 width;
-    u32 height;
     std::string texture_name;
 
+    u32 width;
+    u32 height;
+
+    SDL_Rect src_rect;
+
     // TODO: do not take a string
-    Sprite(std::string texture_name = "", u32 width = 0, u32 height = 0)
-        : texture_name(texture_name), width(width), height(height) {}
+    Sprite(std::string texture_name = "", u32 width = 0, u32 height = 0,
+           SDL_Rect src_rect = SDL_Rect())
+        : texture_name(texture_name),
+          width(width),
+          height(height),
+          src_rect(src_rect) {}
 };
 
 }  // namespace explore::component

@@ -87,18 +87,21 @@ void explore::managers::screen::draw_rect(const SDL_Rect &dst,
 }
 
 void explore::managers::screen::draw_texture(const core::Texture2D &tex,
-                                             SDL_Rect dst) {
+                                             SDL_Rect dst, f32 angle) {
     ASSERT_RET_V(renderer);
     FILL_RECT(tex, dst)
-    SDL_RenderCopy(renderer, tex.get_data(), nullptr, &dst);
+    SDL_RenderCopyEx(renderer, tex.get_data(), nullptr, &dst, angle, nullptr,
+                     SDL_FLIP_NONE);
 }
 
 void explore::managers::screen::draw_texture(const core::Texture2D &tex,
-                                             SDL_Rect src, SDL_Rect dst) {
+                                             SDL_Rect src, SDL_Rect dst,
+                                             f32 angle) {
     ASSERT_RET_V(renderer);
     FILL_RECT(tex, src)
     FILL_RECT(tex, dst)
-    SDL_RenderCopy(renderer, tex.get_data(), &src, &dst);
+    SDL_RenderCopyEx(renderer, tex.get_data(), &src, &dst, angle, nullptr,
+                     SDL_FLIP_NONE);
 }
 
 void explore::managers::screen::clear() {

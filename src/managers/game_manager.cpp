@@ -39,10 +39,10 @@ void explore::managers::game::setup() {
     registry.add_system<system::Render>();
 
     ecs::Entity tank{registry.create_entity("tank")};
-    tank.add_component<component::Transform>(glm::vec2(10.f, 30.f),
+    tank.add_component<component::Transform>(glm::vec2(10.f, 10.f),
                                              glm::vec2(1.f, 1.f), 0.f);
 
-    tank.add_component<component::RigidBody>(glm::vec2(25.f, 25.f));
+    tank.add_component<component::RigidBody>(glm::vec2(40.f, 0.f));
 
     tank.add_component<component::Sprite>("tank");
 }
