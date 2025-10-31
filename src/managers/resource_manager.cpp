@@ -103,7 +103,7 @@ void load_tilemap(const std::filesystem::path &path, const std::string &tex,
                                 static_cast<float>(tile_scale)};
 
                 tile.add_component<component::Transform>(pos, scale, 0.f);
-                tile.add_component<component::Sprite>(tex, tile_width,
+                tile.add_component<component::Sprite>(tex, 0u, tile_width,
                                                       tile_height, src);
             }
 
