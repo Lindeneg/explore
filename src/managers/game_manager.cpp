@@ -45,6 +45,14 @@ void explore::managers::game::setup() {
     tank.add_component<component::RigidBody>(glm::vec2(40.f, 0.f));
 
     tank.add_component<component::Sprite>("tank");
+
+    ecs::Entity truck{registry.create_entity("truck")};
+    truck.add_component<component::Transform>(glm::vec2(50.f, 100.f),
+                                              glm::vec2(1.f, 1.f), 0.f);
+
+    truck.add_component<component::RigidBody>(glm::vec2(0.f, 50.f));
+
+    truck.add_component<component::Sprite>("tank");
 }
 
 void explore::managers::game::load_level(const u32 level) {}
