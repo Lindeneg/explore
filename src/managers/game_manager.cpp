@@ -29,7 +29,7 @@ bool explore::managers::game::initialize() {
 }
 
 void explore::managers::game::setup() {
-    game_context.capped_frame_rate = true;
+    game_context.capped_frame_rate = false;
     game_context.sample_fps = true;
 
     registry.add_system<system::Movement>();
@@ -49,18 +49,18 @@ void explore::managers::game::setup() {
                            "tile-map", 32u, 32u, 2u, 25u, 20u, registry);
 
     ecs::Entity tank{registry.create_entity("tank")};
-    tank.add_component<component::Transform>(glm::vec2(50.f, 100.f),
+    tank.add_component<component::Transform>(glm::vec2(10.f, 10.f),
                                              glm::vec2(1.f, 1.f), 0.f);
 
-    tank.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
+    tank.add_component<component::RigidBody>(glm::vec2(30.f, 0.f));
 
-    tank.add_component<component::Sprite>("tank-tex", 2u);
+    tank.add_component<component::Sprite>("tank-tex", 1u);
 
     ecs::Entity truck{registry.create_entity("truck")};
-    truck.add_component<component::Transform>(glm::vec2(50.f, 100.f),
+    truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
                                               glm::vec2(1.f, 1.f), 0.f);
 
-    truck.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
+    truck.add_component<component::RigidBody>(glm::vec2(20.f, 0.f));
 
     truck.add_component<component::Sprite>("truck-tex", 2u);
 }
