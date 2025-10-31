@@ -24,7 +24,8 @@ std::optional<const core::Texture2D *> get_texture(const std::string &name);
 bool remove_texture(const std::string &name);
 
 void load_tilemap(const std::filesystem::path &path, const std::string &tex,
-                  u32 tex_width, u32 tex_height,
+                  u32 tile_width, u32 tile_height, u32 tile_scale,
+                  u32 map_width, u32 map_height,
                   explore::ecs::Registry &registry);
 
 void destroy();

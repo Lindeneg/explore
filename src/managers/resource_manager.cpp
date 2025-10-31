@@ -55,7 +55,8 @@ bool remove_texture(const std::string &name) {
 }
 
 void load_tilemap(const std::filesystem::path &path, const std::string &tex,
-                  u32 tile_width, u32 tile_height,
+                  u32 tile_width, u32 tile_height, u32 tile_scale,
+                  u32 map_width, u32 map_height,
                   explore::ecs::Registry &registry) {
     std::string file_contents;
     if (!explore::file::read_all(path, file_contents)) {
@@ -63,45 +64,58 @@ void load_tilemap(const std::filesystem::path &path, const std::string &tex,
         return;
     }
 
-    std::stringstream ss(file_contents);
-    std::string line;
-    int y = 0;
-
-    // Determine how many columns are in the tileset texture
     auto tex_opt = explore::managers::resource::get_texture(tex);
     ASSERT_RET_V(tex_opt.has_value());
-    auto texture = tex_opt.value();
+    const explore::core::Texture2D *texture = tex_opt.value();
 
-    int tileset_columns = texture->get_width() / tile_width;
+    const u32 tileset_cols = texture->get_width() / tile_width;
+    ASSERT_RET_V_MSG(tileset_cols > 0,
+                     "tileset columns is zero — check tile sizes");
 
-    while (std::getline(ss, line)) {
+    std::stringstream ss(file_contents);
+    std::string line;
+
+    u32 y = 0;
+    while (y < map_height && std::getline(ss, line)) {
         std::stringstream line_stream(line);
         std::string value;
-        int x = 0;
 
-        while (std::getline(line_stream, value, ',')) {
+        u32 x = 0;
+        while (x < map_width && std::getline(line_stream, value, ',')) {
             int tile_index = std::stoi(value);
 
-            if (tile_index >= 0) {  // skip empty tiles if desired
-                auto src{sdl::rect((tile_index % tileset_columns) * tile_width,
-                                   (tile_index / tileset_columns) * tile_height,
-                                   tile_width, tile_height)};
+            if (tile_index >= 0) {
+                const u32 tile_col =
+                    static_cast<u32>(tile_index) % tileset_cols;
+                const u32 tile_row =
+                    static_cast<u32>(tile_index) / tileset_cols;
 
-                // create tile entity
-                ecs::Entity tile = registry.create_entity();
-                tile.add_component<component::Transform>(
-                    glm::vec2(x * tile_width, y * tile_height),
-                    glm::vec2(1.f, 1.f), 0.f);
+                SDL_Rect src{static_cast<int>(tile_col * tile_width),
+                             static_cast<int>(tile_row * tile_height),
+                             static_cast<int>(tile_width),
+                             static_cast<int>(tile_height)};
 
+                explore::ecs::Entity tile = registry.create_entity();
+
+                glm::vec2 pos{static_cast<float>(x * tile_width * tile_scale),
+                              static_cast<float>(y * tile_height * tile_scale)};
+
+                glm::vec2 scale{static_cast<float>(tile_scale),
+                                static_cast<float>(tile_scale)};
+
+                tile.add_component<component::Transform>(pos, scale, 0.f);
                 tile.add_component<component::Sprite>(tex, tile_width,
                                                       tile_height, src);
             }
+
             ++x;
         }
+
         ++y;
     }
 
-    spdlog::info("Loaded tilemap '{}' with {} rows", path.string(), y);
+    spdlog::info("Tilemap loaded: {}x{} tiles from '{}'", map_width, map_height,
+                 path.string());
 }
 
 void destroy() {

@@ -32,17 +32,17 @@ void explore::managers::game::setup() {
     game_context.capped_frame_rate = true;
     game_context.sample_fps = true;
 
+    registry.add_system<system::Movement>();
+    registry.add_system<system::Render>();
+
     resource::add_texture(
         "tank", FPATH("assets", "images", "tank-panther-right.png"), 32, 32);
 
     resource::add_texture("tile-map", FPATH("assets", "tilemaps", "jungle.png"),
                           320, 96);
 
-    registry.add_system<system::Movement>();
-    registry.add_system<system::Render>();
-
     resource::load_tilemap(FPATH("assets", "tilemaps", "jungle.map"),
-                           "tile-map", 32, 32, registry);
+                           "tile-map", 32u, 32u, 1u, 25u, 20u, registry);
 
     ecs::Entity tank{registry.create_entity("tank")};
     tank.add_component<component::Transform>(glm::vec2(10.f, 10.f),
