@@ -42,7 +42,7 @@ void explore::managers::game::setup() {
                           320, 96);
 
     resource::load_tilemap(FPATH("assets", "tilemaps", "jungle.map"),
-                           "tile-map", 32u, 32u, 1u, 25u, 20u, registry);
+                           "tile-map", 32u, 32u, 2u, 25u, 20u, registry);
 
     ecs::Entity tank{registry.create_entity("tank")};
     tank.add_component<component::Transform>(glm::vec2(10.f, 10.f),

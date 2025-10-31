@@ -90,10 +90,9 @@ void load_tilemap(const std::filesystem::path &path, const std::string &tex,
                 const u32 tile_row =
                     static_cast<u32>(tile_index) / tileset_cols;
 
-                SDL_Rect src{static_cast<int>(tile_col * tile_width),
-                             static_cast<int>(tile_row * tile_height),
-                             static_cast<int>(tile_width),
-                             static_cast<int>(tile_height)};
+                SDL_Rect src{sdl::rect(tile_col * tile_width,
+                                       tile_row * tile_height, tile_width,
+                                       tile_height)};
 
                 explore::ecs::Entity tile = registry.create_entity();
 
