@@ -39,10 +39,7 @@ bool Entity::operator>(const Entity &other) const { return _id > other._id; }
 //////////////////////////////////////
 //////////////////////////////////////
 
-void System::add_entity(Entity entity) {
-    spdlog::debug("DEFAULT ADD ENTITY {}", entity.get_name());
-    _entities.push_back(entity);
-}
+void System::add_entity(Entity entity) { _entities.push_back(entity); }
 
 bool System::remove_entity(Entity entity) {
     u64 old_size{_entities.size()};

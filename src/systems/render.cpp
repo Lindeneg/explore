@@ -16,8 +16,6 @@ Render::Render() {
 }
 
 void Render::add_entity(ecs::Entity entity) {
-    spdlog::debug("RENDER ADD ENTITY {}", entity.get_name());
-
     int z = entity.get_component<component::Sprite>().z_index;
 
     auto it = std::lower_bound(
