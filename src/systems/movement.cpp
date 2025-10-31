@@ -11,7 +11,7 @@ Movement::Movement() {
 
 void Movement::update(f32 delta_time) {
     for (const auto &entity : get_entities()) {
-        auto &transform = entity.get_component<component::Transform>();
+        auto &transform{entity.get_component<component::Transform>()};
         const auto rb{entity.get_component<component::RigidBody>()};
 
         transform.position += (rb.velocity * delta_time);
