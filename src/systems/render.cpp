@@ -20,6 +20,8 @@ void Render::update(const core::GameContext &game_context) {
         const auto transform = entity.get_component<component::Transform>();
         const auto sprite{entity.get_component<component::Sprite>()};
 
+        if (transform.scale.x == 0 && transform.scale.y == 0) continue;
+
         auto opt_texture{managers::resource::get_texture(sprite.texture_name)};
         ASSERT_RET_V(opt_texture.has_value());
         auto texture{opt_texture.value()};
