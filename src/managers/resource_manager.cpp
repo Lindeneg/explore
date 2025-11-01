@@ -60,7 +60,7 @@ void load_tilemap(const std::filesystem::path &path, const std::string &tex,
                   explore::ecs::Registry &registry) {
     std::string file_contents;
     if (!explore::file::read_all(path, file_contents)) {
-        spdlog::error("Failed to read tilemap file: {}", path.string());
+        spdlog::error("failed to read tilemap file: {}", path.string());
         return;
     }
 

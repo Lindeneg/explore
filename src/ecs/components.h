@@ -1,6 +1,8 @@
 #ifndef EXPLORE_ECS_COMPONENTS_H_
 #define EXPLORE_ECS_COMPONENTS_H_
 
+#include <SDL_timer.h>
+
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <string>
@@ -42,6 +44,21 @@ struct Sprite {
           width(width),
           height(height),
           src_rect(src_rect) {}
+};
+
+struct Animation {
+    u32 num_frames;
+    u32 current_frame;
+    u32 speed_rate;
+    u32 start_time;
+    bool is_loop;
+
+    Animation(u32 num_frames = 1, u32 speed_rate = 1, bool is_loop = true)
+        : num_frames(num_frames),
+          current_frame(1),
+          speed_rate(speed_rate),
+          start_time(SDL_GetTicks()),
+          is_loop(is_loop) {}
 };
 
 }  // namespace explore::component
