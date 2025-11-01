@@ -11,7 +11,7 @@ Animation::Animation() {
     require_component<component::Animation>();
 }
 
-void Animation::update(f32 delta_time) {
+void Animation::update(f32) {
     for (auto &entity : get_entities()) {
         auto &animation{entity.get_component<component::Animation>()};
         auto &sprite{entity.get_component<component::Sprite>()};
