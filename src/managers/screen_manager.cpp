@@ -48,8 +48,11 @@ bool explore::managers::screen::initialize() {
         return false;
     }
     SDL_GetCurrentDisplayMode(0, &display_mode);
-    dimensions.x = display_mode.w;
-    dimensions.y = display_mode.h;
+    dimensions.x = 1600;
+    dimensions.y = 1024;
+    //    dimensions.x = display_mode.w;
+    //    dimensions.y = display_mode.h;
+
     if (!window) {
         window = SDL_CreateWindow("Explore", SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED, dimensions.x,

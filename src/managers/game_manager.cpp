@@ -47,6 +47,9 @@ void explore::managers::game::setup() {
     resource::add_texture("chopper-tex",
                           FPATH("assets", "images", "chopper.png"), 32, 32);
 
+    resource::add_texture("radar-tex", FPATH("assets", "images", "radar.png"),
+                          64, 64);
+
     resource::add_texture("tile-map", FPATH("assets", "tilemaps", "jungle.png"),
                           320, 96);
 
@@ -66,6 +69,17 @@ void explore::managers::game::load_level(const u32 level) {
     chopper.add_component<component::Sprite>("chopper-tex", 1u, 32u, 32u);
 
     chopper.add_component<component::Animation>(2u, 15u, true);
+
+    ecs::Entity radar{registry.create_entity("radar")};
+    radar.add_component<component::Transform>(
+        glm::vec2(screen::get_dimensions().x - 72.f, 8.f), glm::vec2(1.f, 1.f),
+        0.f);
+
+    radar.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
+
+    radar.add_component<component::Sprite>("radar-tex", 2u, 64u, 64u);
+
+    radar.add_component<component::Animation>(8u, 5u, true);
 
     //    ecs::Entity tank{registry.create_entity("tank")};
     //    tank.add_component<component::Transform>(glm::vec2(10.f, 10.f),
