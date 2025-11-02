@@ -80,7 +80,7 @@ void explore::managers::game::load_level(const u32 level) {
 
     ecs::Entity tank{registry.create_entity("tank")};
     tank.add_component<component::Transform>(glm::vec2(250.f, 10.f),
-                                             glm::vec2(1.f, 1.f), 0.f);
+                                             glm::vec2(2.f, 2.f), 0.f);
     tank.add_component<component::RigidBody>(glm::vec2(-30.f, 0.f));
     tank.add_component<component::Sprite>("tank-tex", 2u);
     tank.add_component<component::BoxCollider>(32u, 32u);
