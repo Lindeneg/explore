@@ -19,6 +19,8 @@ void set_draw_color(Color color);
 
 void draw_rect(const SDL_Rect &dst, const Color color = color::white);
 
+void draw_rect_outline(const SDL_Rect &dst, const Color color = color::white);
+
 void draw_texture(const core::Texture2D &tex, SDL_Rect dst, f32 angle);
 
 void draw_texture(const core::Texture2D &tex, SDL_Rect src, SDL_Rect dst,

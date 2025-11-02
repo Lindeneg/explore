@@ -89,6 +89,13 @@ void explore::managers::screen::draw_rect(const SDL_Rect &dst,
     SDL_RenderFillRect(renderer, &dst);
 }
 
+void explore::managers::screen::draw_rect_outline(const SDL_Rect &dst,
+                                                  const Color color) {
+    ASSERT_RET_V(renderer);
+    set_draw_color(color);
+    SDL_RenderDrawRect(renderer, &dst);
+}
+
 void explore::managers::screen::draw_texture(const core::Texture2D &tex,
                                              SDL_Rect dst, f32 angle) {
     ASSERT_RET_V(renderer);
