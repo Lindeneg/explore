@@ -13,3 +13,8 @@ Resource:
 General:
 - create tilemap component
 - craete tilemap system
+
+Animation:
+- rethink how we add animation
+- think of it from how we'd do it from an editor
+- we specify amount of frames and then tie a sprite to a frame
