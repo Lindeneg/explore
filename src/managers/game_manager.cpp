@@ -11,6 +11,7 @@
 #include "../ecs/components.h"
 #include "../ecs/ecs.h"
 #include "../systems/animation.h"
+#include "../systems/collision.h"
 #include "../systems/movement.h"
 #include "../systems/render.h"
 #include "./resource_manager.h"
@@ -32,10 +33,12 @@ bool explore::managers::game::initialize() {
 void explore::managers::game::setup() {
     game_context.capped_frame_rate = true;
     game_context.sample_fps = true;
+    game_context.draw_collision_rects = true;
 
     registry.add_system<system::Movement>();
     registry.add_system<system::Render>();
     registry.add_system<system::Animation>();
+    registry.add_system<system::Collision>();
 
     resource::add_texture("tank-tex",
                           FPATH("assets", "images", "tank-panther-right.png"),
@@ -63,39 +66,31 @@ void explore::managers::game::load_level(const u32 level) {
     ecs::Entity chopper{registry.create_entity("chopper")};
     chopper.add_component<component::Transform>(glm::vec2(10.f, 10.f),
                                                 glm::vec2(1.f, 1.f), 0.f);
-
     chopper.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
-
     chopper.add_component<component::Sprite>("chopper-tex", 1u, 32u, 32u);
-
     chopper.add_component<component::Animation>(2u, 15u, true);
 
     ecs::Entity radar{registry.create_entity("radar")};
     radar.add_component<component::Transform>(
         glm::vec2(screen::get_dimensions().x - 72.f, 8.f), glm::vec2(1.f, 1.f),
         0.f);
-
     radar.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
-
     radar.add_component<component::Sprite>("radar-tex", 2u, 64u, 64u);
-
     radar.add_component<component::Animation>(8u, 5u, true);
 
-    //    ecs::Entity tank{registry.create_entity("tank")};
-    //    tank.add_component<component::Transform>(glm::vec2(10.f, 10.f),
-    //                                             glm::vec2(1.f, 1.f), 0.f);
-    //
-    //    tank.add_component<component::RigidBody>(glm::vec2(30.f, 0.f));
-    //
-    //    tank.add_component<component::Sprite>("tank-tex", 1u);
-    //
-    //    ecs::Entity truck{registry.create_entity("truck")};
-    //    truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
-    //                                              glm::vec2(1.f, 1.f), 0.f);
-    //
-    //    truck.add_component<component::RigidBody>(glm::vec2(20.f, 0.f));
-    //
-    //    truck.add_component<component::Sprite>("truck-tex", 2u);
+    ecs::Entity tank{registry.create_entity("tank")};
+    tank.add_component<component::Transform>(glm::vec2(250.f, 10.f),
+                                             glm::vec2(1.f, 1.f), 0.f);
+    tank.add_component<component::RigidBody>(glm::vec2(-30.f, 0.f));
+    tank.add_component<component::Sprite>("tank-tex", 2u);
+    tank.add_component<component::BoxCollider>(32u, 32u);
+
+    ecs::Entity truck{registry.create_entity("truck")};
+    truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
+                                              glm::vec2(1.f, 1.f), 0.f);
+    truck.add_component<component::RigidBody>(glm::vec2(20.f, 0.f));
+    truck.add_component<component::Sprite>("truck-tex", 2u);
+    truck.add_component<component::BoxCollider>(32u, 32u);
 }
 
 void explore::managers::game::run() {
@@ -134,6 +129,7 @@ void explore::managers::game::update() {
 
     registry.get_system<system::Movement>().update(game_context.delta_time);
     registry.get_system<system::Animation>().update(game_context.delta_time);
+    registry.get_system<system::Collision>().update(game_context.delta_time);
 
     registry.update();
 }
