@@ -92,6 +92,7 @@ add_executable(ExploreApp
         src/core/file.cpp
         src/core/game_context.cpp
         src/core/texture2d.cpp
+        src/core/rect.cpp
 
         src/managers/screen_manager.cpp
         src/managers/game_manager.cpp
