@@ -91,6 +91,8 @@ void explore::managers::game::load_level(const u32 level) {
     truck.add_component<component::RigidBody>(glm::vec2(20.f, 0.f));
     truck.add_component<component::Sprite>("truck-tex", 2u);
     truck.add_component<component::BoxCollider>(32u, 32u);
+
+    tank.kill();
 }
 
 void explore::managers::game::run() {
