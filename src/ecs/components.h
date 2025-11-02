@@ -61,6 +61,15 @@ struct Animation {
           is_loop(is_loop) {}
 };
 
+struct BoxCollider {
+    u32 width;
+    u32 height;
+    glm::vec2 offset;
+
+    BoxCollider(u32 width = 0, u32 height = 0, glm::vec2 offset = glm::vec2(0))
+        : width(width), height(height), offset(offset) {}
+};
+
 }  // namespace explore::component
 
 #endif  // EXPLORE_ECS_COMPONENTS_H_
