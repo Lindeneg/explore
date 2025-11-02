@@ -35,6 +35,7 @@ void Collision::update(f32) {
                 spdlog::debug("Collision detected between '{}:{}' and '{}:{}'",
                               a.get_id(), a.get_name(), b.get_id(),
                               b.get_name());
+                // TODO: emit an event
             }
         }
     }
