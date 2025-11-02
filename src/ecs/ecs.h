@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 
 #include <bitset>
+#include <deque>
 #include <memory>
 #include <set>
 #include <string_view>
@@ -62,6 +63,8 @@ class Entity {
     [[nodiscard]] const std::string &get_name() const;
     [[nodiscard]] Registry *get_registry() const;
 
+    void kill();
+
     void set_name(const std::string_view name);
 
     bool operator==(const Entity &other) const;
@@ -94,6 +97,7 @@ class System {
 
    protected:
     std::vector<Entity> _entities;
+    std::string _name;
 
    public:
     System() = default;
@@ -174,6 +178,8 @@ class Registry {
     std::unordered_map<std::type_index, std::shared_ptr<explore::ecs::System>>
         _systems;
 
+    std::deque<u32> _free_ids;
+
    public:
     Registry() = default;
     ~Registry() = default;
@@ -184,8 +190,9 @@ class Registry {
     Entity create_entity(const std::string_view name);
 
     void add_entity_to_systems(Entity entity);
+    void remove_entity_from_systems(Entity entity);
 
-    void kill_entity();
+    void kill_entity(Entity entity);
 
     template <typename TComponent, typename... TArgs>
     void add_component(Entity entity, TArgs &&...args);

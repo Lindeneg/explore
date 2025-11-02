@@ -23,6 +23,8 @@ const std::string &Entity::get_name() const { return _name; }
 
 Registry *Entity::get_registry() const { return _registry; }
 
+void Entity::kill() { _registry->kill_entity(*this); }
+
 void Entity::set_name(const std::string_view name) { _name = name; }
 
 bool Entity::operator==(const Entity &other) const { return _id == other._id; }
@@ -42,19 +44,16 @@ bool Entity::operator>(const Entity &other) const { return _id > other._id; }
 void System::add_entity(Entity entity) { _entities.push_back(entity); }
 
 bool System::remove_entity(Entity entity) {
-    u64 old_size{_entities.size()};
-
-    auto new_end{std::remove_if(_entities.begin(), _entities.end(),
-                                [&](Entity other) { return entity == other; })};
-
-    if (new_end == _entities.end() && old_size == _entities.size()) {
-        spdlog::warn("tried to remove non-existent entity {} from system",
-                     entity.get_id());
-        return false;
+    auto iter{
+        std::remove_if(_entities.begin(), _entities.end(),
+                       [&entity](Entity other) { return entity == other; })};
+    if (iter != _entities.end()) {
+        spdlog::debug("removed entity '{}:{}' from '{}'", entity.get_id(),
+                      entity.get_name(), _name);
+        _entities.erase(iter, _entities.end());
+        return true;
     }
-
-    _entities.erase(new_end, _entities.end());
-    return true;
+    return false;
 }
 
 const std::vector<Entity> &System::get_entities() const { return _entities; }
@@ -74,12 +73,27 @@ void Registry::update() {
         add_entity_to_systems(entity);
     }
     _entities_add_queue.clear();
+
+    for (auto entity : _entities_kill_queue) {
+        const u32 id{entity.get_id()};
+        remove_entity_from_systems(entity);
+        _free_ids.push_back(id);
+        _entity_comp_signatures[id].reset();
+    }
+    _entities_kill_queue.clear();
 }
 
 Entity Registry::create_entity() { return create_entity(default_entity_name); }
 
 Entity Registry::create_entity(const std::string_view entity_name) {
-    const u32 entity_id{_entity_count++};
+    u32 entity_id{};
+    if (_free_ids.empty()) {
+        entity_id = _entity_count++;
+    } else {
+        entity_id = _free_ids.front();
+        _free_ids.pop_front();
+    }
+
     Entity entity{entity_id, entity_name, this};
 
     _entities_add_queue.insert(entity);
@@ -109,7 +123,15 @@ void Registry::add_entity_to_systems(Entity entity) {
     }
 }
 
-void Registry::kill_entity() {}
+void Registry::remove_entity_from_systems(Entity entity) {
+    for (auto system : _systems) {
+        system.second->remove_entity(entity);
+    }
+}
+
+void Registry::kill_entity(Entity entity) {
+    _entities_kill_queue.insert(entity);
+}
 
 }  // namespace explore::ecs
 
