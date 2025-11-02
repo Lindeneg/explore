@@ -1,8 +1,7 @@
 #include "render.h"
 
-#include <SDL_rect.h>
-
 #include "../core/game_context.h"
+#include "../core/rect.h"
 #include "../core/texture2d.h"
 #include "../ecs/components.h"
 #include "../managers/resource_manager.h"
@@ -49,15 +48,13 @@ void Render::update(const core::GameContext &game_context) {
 
         managers::screen::draw_texture(
             *texture, sprite.src_rect,
-            sdl::rect(transform.position, scaled_w, scaled_h),
+            core::rect(transform.position, scaled_w, scaled_h),
             transform.rotation);
 
         if (entity.has_component<component::BoxCollider>() &&
             game_context.draw_collision_rects) {
             const auto &bc = entity.get_component<component::BoxCollider>();
-            const auto rect =
-                sdl::rect(transform.position.x, transform.position.y, bc.width,
-                          bc.height);
+            const auto rect = core::rect(transform, bc);
             managers::screen::draw_rect_outline(rect, color::green);
         }
     }
