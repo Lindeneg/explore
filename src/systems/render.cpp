@@ -10,6 +10,8 @@
 namespace explore::system {
 
 Render::Render() {
+    _name = "RenderSystem";
+
     require_component<component::Transform>();
     require_component<component::Sprite>();
 }

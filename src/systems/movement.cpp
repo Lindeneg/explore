@@ -5,6 +5,8 @@
 namespace explore::system {
 
 Movement::Movement() {
+    _name = "MovementSystem";
+
     require_component<component::Transform>();
     require_component<component::RigidBody>();
 }

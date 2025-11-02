@@ -6,6 +6,8 @@
 namespace explore::system {
 
 Collision::Collision() {
+    _name = "CollisionSystem";
+
     require_component<component::Transform>();
     require_component<component::BoxCollider>();
 }

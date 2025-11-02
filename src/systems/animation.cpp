@@ -7,6 +7,8 @@
 namespace explore::system {
 
 Animation::Animation() {
+    _name = "AnimationSystem";
+
     require_component<component::Sprite>();
     require_component<component::Animation>();
 }
