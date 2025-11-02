@@ -1,6 +1,7 @@
 #ifndef EXPLORE_ECS_COMPONENTS_H_
 #define EXPLORE_ECS_COMPONENTS_H_
 
+#include <SDL_rect.h>
 #include <SDL_timer.h>
 
 #include <glm/fwd.hpp>
