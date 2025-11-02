@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 #include "../core/file.h"
+#include "../core/rect.h"
 #include "../core/texture2d.h"
 #include "../ecs/components.h"
 #include "../ecs/ecs.h"
@@ -90,9 +91,9 @@ void load_tilemap(const std::filesystem::path &path, const std::string &tex,
                 const u32 tile_row =
                     static_cast<u32>(tile_index) / tileset_cols;
 
-                SDL_Rect src{sdl::rect(tile_col * tile_width,
-                                       tile_row * tile_height, tile_width,
-                                       tile_height)};
+                SDL_Rect src{core::rect(tile_col * tile_width,
+                                        tile_row * tile_height, tile_width,
+                                        tile_height)};
 
                 explore::ecs::Entity tile = registry.create_entity();
 
