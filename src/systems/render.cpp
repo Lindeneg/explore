@@ -51,6 +51,15 @@ void Render::update(const core::GameContext &game_context) {
             *texture, sprite.src_rect,
             sdl::rect(transform.position, scaled_w, scaled_h),
             transform.rotation);
+
+        if (entity.has_component<component::BoxCollider>() &&
+            game_context.draw_collision_rects) {
+            const auto &bc = entity.get_component<component::BoxCollider>();
+            const auto rect =
+                sdl::rect(transform.position.x, transform.position.y, bc.width,
+                          bc.height);
+            managers::screen::draw_rect_outline(rect, color::green);
+        }
     }
 }
 
