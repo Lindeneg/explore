@@ -13,7 +13,7 @@ class Damage : public ecs::System {
    public:
     Damage();
 
-    void subscribe_to_events(event::Bus &event_bus);
+    virtual void subscribe_to_events(event::Bus &event_bus) override;
 
     void on_collision(event::Collision &event);
 

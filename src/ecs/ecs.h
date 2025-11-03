@@ -14,9 +14,12 @@
 #include <vector>
 
 #include "../common.h"
-#include "../core/game_context.h"
 
 static constexpr u32 MAX_COMPONENTS{32};
+
+namespace explore::event {
+class Bus;
+}
 
 namespace explore::ecs {
 
@@ -108,6 +111,8 @@ class System {
 
     template <typename TComponent>
     void require_component();
+
+    virtual void subscribe_to_events(event::Bus &event_bus) {};
 
     virtual void add_entity(Entity entity);
     virtual bool remove_entity(Entity entity);
