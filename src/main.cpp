@@ -6,6 +6,7 @@
 using namespace explore;
 
 i32 main() {
+    // TODO read config file
     spdlog::set_level(spdlog::level::trace);
     if (!managers::game::initialize()) {
         return EXIT_FAILURE;
