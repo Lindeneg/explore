@@ -11,9 +11,11 @@
 #include "../ecs/components.h"
 #include "../ecs/ecs.h"
 #include "../events/bus.h"
+#include "../events/key_pressed.h"
 #include "../systems/animation.h"
 #include "../systems/collision.h"
 #include "../systems/damage.h"
+#include "../systems/keyboard.h"
 #include "../systems/movement.h"
 #include "../systems/render.h"
 #include "./resource_manager.h"
@@ -43,6 +45,7 @@ void explore::managers::game::setup() {
     registry.add_system<system::Animation>();
     registry.add_system<system::Collision>();
     registry.add_system<system::Damage>();
+    registry.add_system<system::Keyboard>();
 
     resource::add_texture("tank-tex",
                           FPATH("assets", "images", "tank-panther-right.png"),
@@ -121,6 +124,7 @@ void explore::managers::game::process_input() {
                 if (sdl_event.key.keysym.sym == SDLK_ESCAPE) {
                     is_running = false;
                 }
+                event_bus.emit<event::KeyPressed>(sdl_event.key.keysym.sym);
                 break;
             default:
                 break;
@@ -134,6 +138,7 @@ void explore::managers::game::update() {
     event_bus.reset();
 
     registry.get_system<system::Damage>().subscribe_to_events(event_bus);
+    registry.get_system<system::Keyboard>().subscribe_to_events(event_bus);
 
     registry.get_system<system::Movement>().update(game_context.delta_time);
     registry.get_system<system::Animation>().update();
