@@ -5,12 +5,16 @@
 
 class SDL_Rect;
 
+namespace explore::event {
+class Bus;
+}
+
 namespace explore::system {
 class Collision : public ecs::System {
    public:
     Collision();
 
-    void update(f32) override;
+    void update(event::Bus &event_bus);
 
    private:
     static bool aabb_intersect(const SDL_Rect &a, const SDL_Rect &b);

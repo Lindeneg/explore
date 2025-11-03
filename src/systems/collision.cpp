@@ -2,6 +2,8 @@
 
 #include "../core/rect.h"
 #include "../ecs/components.h"
+#include "../events/bus.h"
+#include "../events/collision.h"
 
 namespace explore::system {
 
@@ -12,7 +14,7 @@ Collision::Collision() {
     require_component<component::BoxCollider>();
 }
 
-void Collision::update(f32) {
+void Collision::update(event::Bus &event_bus) {
     const auto &entities = get_entities();
     const size_t count = entities.size();
 
@@ -32,10 +34,7 @@ void Collision::update(f32) {
             SDL_Rect rb = core::rect(tb, cb);
 
             if (aabb_intersect(ra, rb)) {
-                spdlog::debug("Collision detected between '{}:{}' and '{}:{}'",
-                              a.get_id(), a.get_name(), b.get_id(),
-                              b.get_name());
-                // TODO: emit an event
+                event_bus.emit<event::Collision>(a, b);
             }
         }
     }
