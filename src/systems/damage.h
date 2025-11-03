@@ -1,0 +1,24 @@
+#ifndef EXPLORE_SYSTEMS_DAMAGE_H_
+#define EXPLORE_SYSTEMS_DAMAGE_H_
+
+#include "../ecs/ecs.h"
+
+namespace explore::event {
+class Bus;
+class Collision;
+}  // namespace explore::event
+
+namespace explore::system {
+class Damage : public ecs::System {
+   public:
+    Damage();
+
+    void subscribe_to_events(event::Bus &event_bus);
+
+    void on_collision(event::Collision &event);
+
+    void update();
+};
+}  // namespace explore::system
+
+#endif  // EXPLORE_SYSTEMS_DAMAGE_H_
