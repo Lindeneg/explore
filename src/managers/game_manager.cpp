@@ -10,17 +10,20 @@
 #include "../core/game_context.h"
 #include "../ecs/components.h"
 #include "../ecs/ecs.h"
+#include "../events/bus.h"
 #include "../systems/animation.h"
 #include "../systems/collision.h"
+#include "../systems/damage.h"
 #include "../systems/movement.h"
 #include "../systems/render.h"
 #include "./resource_manager.h"
 #include "./screen_manager.h"
 
 static bool is_running{false};
-static SDL_Event event{};
+static SDL_Event sdl_event{};
 static explore::core::GameContext game_context{};
 static explore::ecs::Registry registry{};
+static explore::event::Bus event_bus{};
 
 bool explore::managers::game::initialize() {
     if (!screen::initialize()) {
@@ -39,6 +42,7 @@ void explore::managers::game::setup() {
     registry.add_system<system::Render>();
     registry.add_system<system::Animation>();
     registry.add_system<system::Collision>();
+    registry.add_system<system::Damage>();
 
     resource::add_texture("tank-tex",
                           FPATH("assets", "images", "tank-panther-right.png"),
@@ -104,17 +108,17 @@ void explore::managers::game::run() {
 }
 
 void explore::managers::game::process_input() {
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
+    while (SDL_PollEvent(&sdl_event)) {
+        switch (sdl_event.type) {
             case SDL_QUIT:
                 is_running = false;
                 break;
             case SDL_KEYDOWN:
-                if (event.key.keysym.sym == SDLK_d) {
+                if (sdl_event.key.keysym.sym == SDLK_d) {
                     game_context.draw_collision_rects =
                         !game_context.draw_collision_rects;
                 }
-                if (event.key.keysym.sym == SDLK_ESCAPE) {
+                if (sdl_event.key.keysym.sym == SDLK_ESCAPE) {
                     is_running = false;
                 }
                 break;
@@ -127,9 +131,13 @@ void explore::managers::game::process_input() {
 void explore::managers::game::update() {
     game_context.update_delta_time();
 
+    event_bus.reset();
+
+    registry.get_system<system::Damage>().subscribe_to_events(event_bus);
+
     registry.get_system<system::Movement>().update(game_context.delta_time);
-    registry.get_system<system::Animation>().update(game_context.delta_time);
-    registry.get_system<system::Collision>().update(game_context.delta_time);
+    registry.get_system<system::Animation>().update();
+    registry.get_system<system::Collision>().update(event_bus);
 
     registry.update();
 }
