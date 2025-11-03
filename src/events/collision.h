@@ -2,6 +2,7 @@
 #define EXPLORE_EVENTS_COLLISION_H_
 
 #include "../ecs/ecs.h"
+#include "./event.h"
 
 namespace explore::event {
 
