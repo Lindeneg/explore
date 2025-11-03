@@ -8,7 +8,7 @@ class Movement : public ecs::System {
    public:
     Movement();
 
-    void update(f32 delta_time) override;
+    void update(f32 delta_time);
 };
 }  // namespace explore::system
 

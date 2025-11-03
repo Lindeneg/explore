@@ -8,7 +8,7 @@ class Animation : public ecs::System {
    public:
     Animation();
 
-    void update(f32) override;
+    void update();
 };
 }  // namespace explore::system
 

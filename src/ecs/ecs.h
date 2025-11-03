@@ -111,9 +111,6 @@ class System {
 
     virtual void add_entity(Entity entity);
     virtual bool remove_entity(Entity entity);
-
-    virtual void update(f32 delta_time) {}
-    virtual void update(const core::GameContext &game_context) {}
 };
 
 template <typename TComponent>

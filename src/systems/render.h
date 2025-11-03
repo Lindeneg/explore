@@ -10,7 +10,7 @@ class Render : public ecs::System {
 
     void add_entity(ecs::Entity entity) override;
 
-    void update(const core::GameContext &game_context) override;
+    void update(const core::GameContext &game_context);
 };
 }  // namespace explore::system
 
