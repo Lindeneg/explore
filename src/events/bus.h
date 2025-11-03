@@ -8,12 +8,9 @@
 #include <typeindex>
 #include <utility>
 
-namespace explore::event {
+#include "./event.h"
 
-class Event {
-   public:
-    Event() = default;
-};
+namespace explore::event {
 
 class ICallback {
    private:
@@ -54,7 +51,9 @@ class Bus {
     Bus() = default;
     ~Bus() = default;
 
-    template <typename TOwner, typename TEvent>
+    void reset() { _subscribers.clear(); }
+
+    template <typename TEvent, typename TOwner>
     void on(TOwner *owner, void (TOwner::*callbackFunction)(TEvent &)) {
         if (!_subscribers[typeid(TEvent)].get()) {
             _subscribers[typeid(TEvent)] = std::make_unique<HandlerList>();
