@@ -104,6 +104,7 @@ add_executable(ExploreApp
         src/systems/render.cpp
         src/systems/animation.cpp
         src/systems/collision.cpp
+        src/systems/damage.cpp
 )
 
 add_custom_command(TARGET ExploreApp POST_BUILD
