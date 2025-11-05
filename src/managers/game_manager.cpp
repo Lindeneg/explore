@@ -16,6 +16,7 @@
 #include "../systems/animation.h"
 #include "../systems/collision.h"
 #include "../systems/damage.h"
+#include "../systems/debug_render.h"
 #include "../systems/keyboard.h"
 #include "../systems/movement.h"
 #include "../systems/render.h"
@@ -45,6 +46,7 @@ void explore::managers::game::setup() {
     registry.add_system<system::Render>();
     registry.add_system<system::Animation>();
     registry.add_system<system::Collision>();
+    registry.add_system<system::DebugRender>();
     registry.add_system<system::Damage>();
     registry.add_system<system::Keyboard>();
 
@@ -153,7 +155,13 @@ void explore::managers::game::update() {
 void explore::managers::game::render() {
     screen::set_draw_color(color::black);
     screen::clear();
-    registry.get_system<system::Render>().update(game_context);
+
+    registry.get_system<system::Render>().update();
+
+    if (game_context.draw_collision_rects) {
+        registry.get_system<system::DebugRender>().update();
+    }
+
     screen::present();
 }
 
