@@ -3,6 +3,7 @@
 
 #include <SDL_rect.h>
 #include <SDL_timer.h>
+#include <spdlog/spdlog.h>
 
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
@@ -32,19 +33,12 @@ struct Sprite {
     std::string texture_name;
 
     u32 z_index;
-    u32 width;
-    u32 height;
-
     SDL_Rect src_rect;
 
     // TODO: do not take a string
-    Sprite(std::string texture_name = "", u32 z_index = 0, u32 width = 0,
-           u32 height = 0, SDL_Rect src_rect = SDL_Rect())
-        : texture_name(texture_name),
-          z_index(z_index),
-          width(width),
-          height(height),
-          src_rect(src_rect) {}
+    Sprite(std::string texture_name = "", u32 z_index = 0,
+           SDL_Rect src_rect = SDL_Rect())
+        : texture_name(texture_name), z_index(z_index), src_rect(src_rect) {}
 };
 
 struct Animation {
