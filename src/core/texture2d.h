@@ -14,8 +14,7 @@ namespace explore::core {
 class Texture2D {
    public:
     Texture2D();
-    Texture2D(std::string name, std::filesystem::path path, u32 width,
-              u32 height);
+    Texture2D(std::string name, std::filesystem::path path);
     ~Texture2D();
 
     [[nodiscard]] const std::string &get_name() const { return _name; }
@@ -32,10 +31,10 @@ class Texture2D {
     const std::string _name;
     const std::filesystem::path _path;
 
-    SDL_Texture *_data;
+    u32 _width;
+    u32 _height;
 
-    const u32 _width;
-    const u32 _height;
+    SDL_Texture *_data;
 };
 }  // namespace explore::core
 

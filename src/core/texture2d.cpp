@@ -8,13 +8,12 @@ namespace explore::core {
 Texture2D::Texture2D()
     : _name(""), _path(""), _data(nullptr), _width(0), _height(0) {}
 
-Texture2D::Texture2D(std::string name, std::filesystem::path path,
-                     const u32 width, const u32 height)
+Texture2D::Texture2D(std::string name, std::filesystem::path path)
     : _name(std::move(name)),
       _path(std::move(path)),
       _data(nullptr),
-      _width(width),
-      _height(height) {}
+      _width(0),
+      _height(0) {}
 
 bool Texture2D::initialize(SDL_Renderer *renderer) {
     SDL_Surface *surface{IMG_Load(_path.string().c_str())};
@@ -22,6 +21,9 @@ bool Texture2D::initialize(SDL_Renderer *renderer) {
 
     SDL_Texture *sdl_texture{SDL_CreateTextureFromSurface(renderer, surface)};
     ASSERT_RET(sdl_texture, false);
+
+    _width = surface->w;
+    _height = surface->h;
 
     SDL_FreeSurface(surface);
 
