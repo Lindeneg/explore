@@ -18,14 +18,13 @@
 static std::unordered_map<std::string, explore::core::Texture2D *> textures{};
 
 namespace explore::managers::resource {
-bool add_texture(const std::string &name, const std::filesystem::path &path,
-                 const u32 width, const u32 height) {
+bool add_texture(const std::string &name, const std::filesystem::path &path) {
     if (const auto iter{textures.find(name)}; iter != textures.end()) {
         spdlog::warn("texture '{}' has already been added", name);
         return true;
     }
 
-    auto tex{new core::Texture2D(name, path, width, height)};
+    auto tex{new core::Texture2D(name, path)};
 
     if (!tex->initialize(screen::get_renderer())) {
         spdlog::error("failed to initialize texture '{}'<-'{}'", name,
@@ -104,8 +103,7 @@ void load_tilemap(const std::filesystem::path &path, const std::string &tex,
                                 static_cast<float>(tile_scale)};
 
                 tile.add_component<component::Transform>(pos, scale, 0.f);
-                tile.add_component<component::Sprite>(tex, 0u, tile_width,
-                                                      tile_height, src);
+                tile.add_component<component::Sprite>(tex, 0u, src);
             }
 
             ++x;

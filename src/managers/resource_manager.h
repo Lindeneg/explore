@@ -16,8 +16,7 @@ class Registry;
 }
 
 namespace explore::managers::resource {
-bool add_texture(const std::string &name, const std::filesystem::path &path,
-                 u32 width, u32 height);
+bool add_texture(const std::string &name, const std::filesystem::path &path);
 
 std::optional<const core::Texture2D *> get_texture(const std::string &name);
 

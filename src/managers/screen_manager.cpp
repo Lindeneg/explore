@@ -7,21 +7,8 @@
 #include "../core/texture2d.h"
 #include "resource_manager.h"
 
-#define FILL_RECT_P(tex, rect)        \
-    if (rect.w == 0 && rect.h == 0) { \
-        rect.w = tex->get_width();    \
-        rect.h = tex->get_height();   \
-    }
-
-#define FILL_RECT(tex, rect)          \
-    if (rect.w == 0 && rect.h == 0) { \
-        rect.w = tex.get_width();     \
-        rect.h = tex.get_height();    \
-    }
-
 static u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
                                SDL_INIT_EVENTS};
-
 static SDL_Window *window{nullptr};
 static SDL_Renderer *renderer{nullptr};
 static SDL_DisplayMode display_mode{};
@@ -99,7 +86,6 @@ void explore::managers::screen::draw_rect_outline(const SDL_Rect &dst,
 void explore::managers::screen::draw_texture(const core::Texture2D &tex,
                                              SDL_Rect dst, f32 angle) {
     ASSERT_RET_V(renderer);
-    FILL_RECT(tex, dst)
     SDL_RenderCopyEx(renderer, tex.get_data(), nullptr, &dst, angle, nullptr,
                      SDL_FLIP_NONE);
 }
@@ -108,8 +94,6 @@ void explore::managers::screen::draw_texture(const core::Texture2D &tex,
                                              SDL_Rect src, SDL_Rect dst,
                                              f32 angle) {
     ASSERT_RET_V(renderer);
-    FILL_RECT(tex, src)
-    FILL_RECT(tex, dst)
     SDL_RenderCopyEx(renderer, tex.get_data(), &src, &dst, angle, nullptr,
                      SDL_FLIP_NONE);
 }

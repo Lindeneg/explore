@@ -8,6 +8,7 @@
 #include "../common.h"
 #include "../core/file.h"
 #include "../core/game_context.h"
+#include "../core/rect.h"
 #include "../ecs/components.h"
 #include "../ecs/ecs.h"
 #include "../events/bus.h"
@@ -48,20 +49,18 @@ void explore::managers::game::setup() {
     registry.add_system<system::Keyboard>();
 
     resource::add_texture("tank-tex",
-                          FPATH("assets", "images", "tank-panther-right.png"),
-                          32, 32);
+                          FPATH("assets", "images", "tank-panther-right.png"));
 
-    resource::add_texture(
-        "truck-tex", FPATH("assets", "images", "truck-ford-right.png"), 32, 32);
+    resource::add_texture("truck-tex",
+                          FPATH("assets", "images", "truck-ford-right.png"));
 
     resource::add_texture("chopper-tex",
-                          FPATH("assets", "images", "chopper.png"), 32, 32);
+                          FPATH("assets", "images", "chopper.png"));
 
-    resource::add_texture("radar-tex", FPATH("assets", "images", "radar.png"),
-                          64, 64);
+    resource::add_texture("radar-tex", FPATH("assets", "images", "radar.png"));
 
-    resource::add_texture("tile-map", FPATH("assets", "tilemaps", "jungle.png"),
-                          320, 96);
+    resource::add_texture("tile-map",
+                          FPATH("assets", "tilemaps", "jungle.png"));
 
     load_level(1u);
 }
@@ -74,7 +73,8 @@ void explore::managers::game::load_level(const u32 level) {
     chopper.add_component<component::Transform>(glm::vec2(10.f, 10.f),
                                                 glm::vec2(1.f, 1.f), 0.f);
     chopper.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
-    chopper.add_component<component::Sprite>("chopper-tex", 1u, 32u, 32u);
+    chopper.add_component<component::Sprite>("chopper-tex", 1u,
+                                             core::rect(0, 0, 32, 32));
     chopper.add_component<component::Animation>(2u, 15u, true);
 
     ecs::Entity radar{registry.create_entity("radar")};
@@ -82,21 +82,24 @@ void explore::managers::game::load_level(const u32 level) {
         glm::vec2(screen::get_dimensions().x - 72.f, 8.f), glm::vec2(1.f, 1.f),
         0.f);
     radar.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
-    radar.add_component<component::Sprite>("radar-tex", 2u, 64u, 64u);
+    radar.add_component<component::Sprite>("radar-tex", 2u,
+                                           core::rect(0, 0, 64, 64));
     radar.add_component<component::Animation>(8u, 5u, true);
 
     ecs::Entity tank{registry.create_entity("tank")};
     tank.add_component<component::Transform>(glm::vec2(250.f, 10.f),
                                              glm::vec2(2.f, 2.f), 0.f);
     tank.add_component<component::RigidBody>(glm::vec2(-30.f, 0.f));
-    tank.add_component<component::Sprite>("tank-tex", 2u);
+    tank.add_component<component::Sprite>("tank-tex", 2u,
+                                          core::rect(0, 0, 32, 32));
     tank.add_component<component::BoxCollider>(32u, 32u);
 
     ecs::Entity truck{registry.create_entity("truck")};
     truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
                                               glm::vec2(1.f, 1.f), 0.f);
     truck.add_component<component::RigidBody>(glm::vec2(20.f, 0.f));
-    truck.add_component<component::Sprite>("truck-tex", 2u);
+    truck.add_component<component::Sprite>("truck-tex", 2u,
+                                           core::rect(0, 0, 32, 32));
     truck.add_component<component::BoxCollider>(32u, 32u);
 }
 
