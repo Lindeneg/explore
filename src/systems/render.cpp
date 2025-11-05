@@ -2,7 +2,6 @@
 
 #include "../core/game_context.h"
 #include "../core/rect.h"
-#include "../core/texture2d.h"
 #include "../ecs/components.h"
 #include "../managers/resource_manager.h"
 #include "../managers/screen_manager.h"
@@ -39,14 +38,10 @@ void Render::update(const core::GameContext &game_context) {
         ASSERT_RET_V(opt_texture.has_value());
         auto texture{opt_texture.value()};
 
-        u32 scaled_w{sprite.width};
-        u32 scaled_h{sprite.height};
-        if (sprite.width == 0 && sprite.height == 0) {
-            scaled_w = texture->get_width();
-            scaled_h = texture->get_height();
-        }
-        scaled_w = static_cast<u32>(scaled_w * transform.scale.x);
-        scaled_h = static_cast<u32>(scaled_h * transform.scale.y);
+        const auto scaled_w =
+            static_cast<u32>(sprite.src_rect.w * transform.scale.x);
+        const auto scaled_h =
+            static_cast<u32>(sprite.src_rect.h * transform.scale.y);
 
         managers::screen::draw_texture(
             *texture, sprite.src_rect,

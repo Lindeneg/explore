@@ -22,7 +22,7 @@ void Animation::update() {
             static_cast<u32>((SDL_GetTicks() - animation.start_time) *
                              animation.speed_rate / 1000) %
             animation.num_frames;
-        sprite.src_rect.x = animation.current_frame * sprite.width;
+        sprite.src_rect.x = animation.current_frame * sprite.src_rect.w;
     }
 }
 };  // namespace explore::system
