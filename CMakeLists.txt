@@ -104,6 +104,7 @@ add_executable(ExploreApp
         src/systems/render.cpp
         src/systems/animation.cpp
         src/systems/collision.cpp
+        src/systems/debug_render.cpp
         src/systems/damage.cpp
         src/systems/keyboard.cpp
 )
