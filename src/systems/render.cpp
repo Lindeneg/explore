@@ -1,6 +1,5 @@
 #include "render.h"
 
-#include "../core/game_context.h"
 #include "../core/rect.h"
 #include "../ecs/components.h"
 #include "../managers/resource_manager.h"
@@ -27,7 +26,7 @@ void Render::add_entity(ecs::Entity entity) {
     _entities.insert(it, entity);
 }
 
-void Render::update(const core::GameContext &game_context) {
+void Render::update() {
     for (const auto &entity : get_entities()) {
         const auto transform = entity.get_component<component::Transform>();
         const auto sprite{entity.get_component<component::Sprite>()};
@@ -47,13 +46,6 @@ void Render::update(const core::GameContext &game_context) {
             *texture, sprite.src_rect,
             core::rect(transform.position, scaled_w, scaled_h),
             transform.rotation);
-
-        if (entity.has_component<component::BoxCollider>() &&
-            game_context.draw_collision_rects) {
-            const auto &bc = entity.get_component<component::BoxCollider>();
-            const auto rect = core::rect(transform, bc);
-            managers::screen::draw_rect_outline(rect, color::green);
-        }
     }
 }
 

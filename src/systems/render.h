@@ -3,10 +3,6 @@
 
 #include "../ecs/ecs.h"
 
-namespace explore::core {
-class GameContext;
-}
-
 namespace explore::system {
 class Render : public ecs::System {
    public:
@@ -14,7 +10,7 @@ class Render : public ecs::System {
 
     void add_entity(ecs::Entity entity) override;
 
-    void update(const core::GameContext &game_context);
+    void update();
 };
 }  // namespace explore::system
 
