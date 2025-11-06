@@ -172,7 +172,3 @@ void explore::manager::game::render() {
     screen_manager.present();
 }
 
-void explore::manager::game::destroy() {
-    // delete resource_manager;
-    screen_manager.destroy();
-}

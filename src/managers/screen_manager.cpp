@@ -18,7 +18,21 @@ ScreenManager::ScreenManager()
       _display_mode({}),
       _dimensions(glm::ivec2(0)) {}
 
-ScreenManager::~ScreenManager() { destroy(); }
+ScreenManager::~ScreenManager() {
+    if (_renderer) {
+        SDL_DestroyRenderer(_renderer);
+        _renderer = nullptr;
+        spdlog::trace("destroyed SDL _renderer");
+    }
+    if (_window) {
+        SDL_DestroyWindow(_window);
+        _window = nullptr;
+        spdlog::trace("destroyed SDL window");
+    }
+    IMG_Quit();
+    SDL_QuitSubSystem(sdl_subsystem_flags);
+    SDL_Quit();
+}
 
 bool ScreenManager::_initialize_sdl() {
     if (SDL_WasInit(sdl_subsystem_flags)) {
@@ -122,22 +136,6 @@ void ScreenManager::clear() {
 void ScreenManager::present() const {
     ASSERT_RET_V(_renderer);
     SDL_RenderPresent(_renderer);
-}
-
-void ScreenManager::destroy() {
-    if (_renderer) {
-        SDL_DestroyRenderer(_renderer);
-        _renderer = nullptr;
-        spdlog::trace("destroyed SDL _renderer");
-    }
-    if (_window) {
-        SDL_DestroyWindow(_window);
-        _window = nullptr;
-        spdlog::trace("destroyed SDL window");
-    }
-    IMG_Quit();
-    SDL_QuitSubSystem(sdl_subsystem_flags);
-    SDL_Quit();
 }
 
 }  // namespace explore::manager

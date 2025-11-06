@@ -52,8 +52,6 @@ class ScreenManager {
     void clear();
 
     void present() const;
-
-    void destroy();
 };
 
 }  // namespace explore::manager

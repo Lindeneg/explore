@@ -20,7 +20,6 @@ void update();
 
 void render();
 
-void destroy();
 }  // namespace explore::manager::game
 
 #endif  // EXPLORE_MANAGERS_GAME_MANAGER_H

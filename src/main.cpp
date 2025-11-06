@@ -12,6 +12,5 @@ i32 main() {
         return EXIT_FAILURE;
     }
     manager::game::run();
-    manager::game::destroy();
     return EXIT_SUCCESS;
 }
