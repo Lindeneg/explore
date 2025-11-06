@@ -9,12 +9,18 @@
 
 static u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
                                SDL_INIT_EVENTS};
-static SDL_Window *window{nullptr};
-static SDL_Renderer *renderer{nullptr};
-static SDL_DisplayMode display_mode{};
-static auto dimensions{glm::ivec2(0, 0)};
 
-static bool initialize_sdl() {
+namespace explore::managers {
+
+ScreenManager::ScreenManager()
+    : _window(nullptr),
+      _renderer(nullptr),
+      _display_mode({}),
+      _dimensions(glm::ivec2(0)) {}
+
+ScreenManager::~ScreenManager() { destroy(); }
+
+bool ScreenManager::_initialize_sdl() {
     if (SDL_WasInit(sdl_subsystem_flags)) {
         spdlog::warn("SDL has already been initialized");
         return true;
@@ -30,33 +36,45 @@ static bool initialize_sdl() {
     return true;
 }
 
-bool explore::managers::screen::initialize() {
-    if (!initialize_sdl()) {
+glm::ivec2 ScreenManager::get_dimensions() const { return _dimensions; }
+
+SDL_Window *ScreenManager::get_window() const {
+    ASSERT_RET(_window, nullptr);
+    return _window;
+}
+
+SDL_Renderer *ScreenManager::get_renderer() const {
+    ASSERT_RET(_renderer, nullptr);
+    return _renderer;
+}
+
+bool ScreenManager::initialize() {
+    if (!_initialize_sdl()) {
         return false;
     }
-    SDL_GetCurrentDisplayMode(0, &display_mode);
-    dimensions.x = 1600;
-    dimensions.y = 1024;
+    SDL_GetCurrentDisplayMode(0, &_display_mode);
+    _dimensions.x = 1600;
+    _dimensions.y = 1024;
     //    dimensions.x = display_mode.w;
     //    dimensions.y = display_mode.h;
 
-    if (!window) {
-        window = SDL_CreateWindow("Explore", SDL_WINDOWPOS_CENTERED,
-                                  SDL_WINDOWPOS_CENTERED, dimensions.x,
-                                  dimensions.y, SDL_WINDOW_BORDERLESS);
-        if (!window) {
+    if (!_window) {
+        _window = SDL_CreateWindow("Explore", SDL_WINDOWPOS_CENTERED,
+                                   SDL_WINDOWPOS_CENTERED, _dimensions.x,
+                                   _dimensions.y, SDL_WINDOW_BORDERLESS);
+        if (!_window) {
             spdlog::error("failed to create SDL window {0}", SDL_GetError());
             return false;
         }
-        spdlog::trace("initialized SDL window ({0:d},{1:d})", dimensions.x,
-                      dimensions.y);
+        spdlog::trace("initialized SDL window ({0:d},{1:d})", _dimensions.x,
+                      _dimensions.y);
     }
-    if (!renderer) {
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        if (!renderer) {
+    if (!_renderer) {
+        _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
+        if (!_renderer) {
             spdlog::error("failed to create SDL renderer {0}", SDL_GetError());
-            SDL_DestroyWindow(window);
-            window = nullptr;
+            SDL_DestroyWindow(_window);
+            _window = nullptr;
             return false;
         }
         spdlog::trace("initialized SDL renderer");
@@ -64,68 +82,53 @@ bool explore::managers::screen::initialize() {
     return true;
 }
 
-void explore::managers::screen::set_draw_color(const Color color) {
-    ASSERT_RET_V(renderer);
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+void ScreenManager::set_draw_color(const Color color) {
+    ASSERT_RET_V(_renderer);
+    SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
 }
 
-void explore::managers::screen::draw_rect(const SDL_Rect &dst,
-                                          const Color color) {
-    ASSERT_RET_V(renderer);
+void ScreenManager::draw_rect(const SDL_Rect &dst, const Color color) {
+    ASSERT_RET_V(_renderer);
     set_draw_color(color);
-    SDL_RenderFillRect(renderer, &dst);
+    SDL_RenderFillRect(_renderer, &dst);
 }
 
-void explore::managers::screen::draw_rect_outline(const SDL_Rect &dst,
-                                                  const Color color) {
-    ASSERT_RET_V(renderer);
+void ScreenManager::draw_rect_outline(const SDL_Rect &dst, const Color color) {
+    ASSERT_RET_V(_renderer);
     set_draw_color(color);
-    SDL_RenderDrawRect(renderer, &dst);
+    SDL_RenderDrawRect(_renderer, &dst);
 }
 
-void explore::managers::screen::draw_texture(const core::Texture2D &tex,
-                                             SDL_Rect dst, f32 angle) {
-    ASSERT_RET_V(renderer);
-    SDL_RenderCopyEx(renderer, tex.get_data(), nullptr, &dst, angle, nullptr,
+void ScreenManager::draw_texture(const core::Texture2D &tex, SDL_Rect dst,
+                                 f32 angle) const {
+    ASSERT_RET_V(_renderer);
+    SDL_RenderCopyEx(_renderer, tex.get_data(), nullptr, &dst, angle, nullptr,
                      SDL_FLIP_NONE);
 }
 
-void explore::managers::screen::draw_texture(const core::Texture2D &tex,
-                                             SDL_Rect src, SDL_Rect dst,
-                                             f32 angle) {
-    ASSERT_RET_V(renderer);
-    SDL_RenderCopyEx(renderer, tex.get_data(), &src, &dst, angle, nullptr,
+void ScreenManager::draw_texture(const core::Texture2D &tex, SDL_Rect src,
+                                 SDL_Rect dst, f32 angle) const {
+    ASSERT_RET_V(_renderer);
+    SDL_RenderCopyEx(_renderer, tex.get_data(), &src, &dst, angle, nullptr,
                      SDL_FLIP_NONE);
 }
 
-void explore::managers::screen::clear() {
-    ASSERT_RET_V(renderer);
+void ScreenManager::clear() {
+    ASSERT_RET_V(_renderer);
     set_draw_color(color::black);
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(_renderer);
 }
 
-void explore::managers::screen::present() {
-    ASSERT_RET_V(renderer);
-    SDL_RenderPresent(renderer);
+void ScreenManager::present() {
+    ASSERT_RET_V(_renderer);
+    SDL_RenderPresent(_renderer);
 }
 
-glm::ivec2 explore::managers::screen::get_dimensions() { return dimensions; }
-
-SDL_Window *explore::managers::screen::get_window() {
-    ASSERT_RET(window, nullptr);
-    return window;
-}
-
-SDL_Renderer *explore::managers::screen::get_renderer() {
-    ASSERT_RET(renderer, nullptr);
-    return renderer;
-}
-
-void explore::managers::screen::destroy() {
-    if (renderer) {
-        SDL_DestroyRenderer(renderer);
-        renderer = nullptr;
-        spdlog::trace("destroyed SDL renderer");
+void ScreenManager::destroy() {
+    if (_renderer) {
+        SDL_DestroyRenderer(_renderer);
+        _renderer = nullptr;
+        spdlog::trace("destroyed SDL _renderer");
     }
     if (window) {
         SDL_DestroyWindow(window);
@@ -136,3 +139,6 @@ void explore::managers::screen::destroy() {
     SDL_QuitSubSystem(sdl_subsystem_flags);
     SDL_Quit();
 }
+
+}  // namespace explore::managers
+

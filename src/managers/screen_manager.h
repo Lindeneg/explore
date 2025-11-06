@@ -12,31 +12,50 @@ namespace explore::core {
 class Texture2D;
 }
 
-namespace explore::managers::screen {
-bool initialize();
+namespace explore::managers {
 
-void set_draw_color(Color color);
+class ScreenManager {
+   private:
+    SDL_Window *_window;
+    SDL_Renderer *_renderer;
+    SDL_DisplayMode _display_mode;
+    glm::ivec2 _dimensions;
 
-void draw_rect(const SDL_Rect &dst, const Color color = color::white);
+   private:
+    bool _initialize_sdl();
 
-void draw_rect_outline(const SDL_Rect &dst, const Color color = color::white);
+   public:
+    ScreenManager();
+    ~ScreenManager();
 
-void draw_texture(const core::Texture2D &tex, SDL_Rect dst, f32 angle);
+    glm::ivec2 get_dimensions() const;
 
-void draw_texture(const core::Texture2D &tex, SDL_Rect src, SDL_Rect dst,
-                  f32 angle);
+    SDL_Window *get_window() const;
 
-void clear();
+    SDL_Renderer *get_renderer() const;
 
-void present();
+    bool initialize();
 
-glm::ivec2 get_dimensions();
+    void set_draw_color(Color color);
 
-SDL_Window *get_window();
+    void draw_rect(const SDL_Rect &dst, const Color color = color::white);
 
-SDL_Renderer *get_renderer();
+    void draw_rect_outline(const SDL_Rect &dst,
+                           const Color color = color::white);
 
-void destroy();
-}  // namespace explore::managers::screen
+    void draw_texture(const core::Texture2D &tex, SDL_Rect dst,
+                      f32 angle) const;
+
+    void draw_texture(const core::Texture2D &tex, SDL_Rect src, SDL_Rect dst,
+                      f32 angle) const;
+
+    void clear();
+
+    void present() const;
+
+    void destroy();
+};
+
+}  // namespace explore::managers
 
 #endif  // EXPLORE_MANAGERS_SCREEN_MANAGER_H
