@@ -6,7 +6,6 @@
 #include <optional>
 #include <sstream>
 #include <string>
-#include <unordered_map>
 
 #include "../core/file.h"
 #include "../core/rect.h"
@@ -15,60 +14,72 @@
 #include "../ecs/ecs.h"
 #include "./screen_manager.h"
 
-static std::unordered_map<std::string, explore::core::Texture2D *> textures{};
+namespace explore::manager {
 
-namespace explore::managers::resource {
-bool add_texture(const std::string &name, const std::filesystem::path &path) {
-    if (const auto iter{textures.find(name)}; iter != textures.end()) {
+ResourceManager::ResourceManager() : _textures(), _renderer(nullptr) {}
+
+ResourceManager::~ResourceManager() {
+    spdlog::trace("clearing all resources");
+    _textures.clear();
+}
+
+void ResourceManager::set_renderer(SDL_Renderer *renderer) {
+    _renderer = renderer;
+}
+
+bool ResourceManager::add_texture(const std::string &name,
+                                  const std::filesystem::path &path) {
+    ASSERT_RET_MSG(_renderer, false, "renderer is null");
+
+    if (_textures.find(name) != _textures.end()) {
         spdlog::warn("texture '{}' has already been added", name);
         return true;
     }
 
-    auto tex{new core::Texture2D(name, path)};
-
-    if (!tex->initialize(screen::get_renderer())) {
+    auto tex = std::make_unique<core::Texture2D>(name, path);
+    if (!tex->initialize(_renderer)) {
         spdlog::error("failed to initialize texture '{}'<-'{}'", name,
                       path.string());
         return false;
     }
 
-    textures.emplace(name, std::move(tex));
+    _textures.emplace(name, std::move(tex));
     return true;
 }
 
-std::optional<const core::Texture2D *> get_texture(const std::string &name) {
-    const auto iter{textures.find(name)};
-    ASSERT_RET_MSG(iter != textures.end(), std::nullopt,
-                   "texture '%s' not found", name.c_str());
-    return iter->second;
+std::optional<std::reference_wrapper<const core::Texture2D>>
+ResourceManager::get_texture(const std::string &name) const {
+    auto it = _textures.find(name);
+    if (it == _textures.end()) return std::nullopt;
+    return std::cref(*it->second);
 }
 
-bool remove_texture(const std::string &name) {
-    const auto iter{textures.find(name)};
-    if (iter == textures.end()) {
+bool ResourceManager::remove_texture(const std::string &name) {
+    const auto iter{_textures.find(name)};
+    if (iter == _textures.end()) {
         spdlog::error("failed to remove texture: '{}'", name);
         return false;
     }
-    textures.erase(iter);
-    delete iter->second;
+    _textures.erase(iter);
     return true;
 }
 
-void load_tilemap(const std::filesystem::path &path, const std::string &tex,
-                  u32 tile_width, u32 tile_height, u32 tile_scale,
-                  u32 map_width, u32 map_height,
-                  explore::ecs::Registry &registry) {
+void ResourceManager::load_tilemap(const std::filesystem::path &path,
+                                   const std::string &tex, u32 tile_width,
+                                   u32 tile_height, u32 tile_scale,
+                                   u32 map_width, u32 map_height,
+                                   explore::ecs::Registry &registry) {
     std::string file_contents;
     if (!explore::file::read_all(path, file_contents)) {
         spdlog::error("failed to read tilemap file: {}", path.string());
         return;
     }
 
-    auto tex_opt = explore::managers::resource::get_texture(tex);
+    auto tex_opt = get_texture(tex);
     ASSERT_RET_V(tex_opt.has_value());
-    const explore::core::Texture2D *texture = tex_opt.value();
+    const explore::core::Texture2D &texture = tex_opt->get();
 
-    const u32 tileset_cols = texture->get_width() / tile_width;
+    const u32 tileset_cols = texture.get_width() / tile_width;
     ASSERT_RET_V_MSG(tileset_cols > 0,
                      "tileset columns is zero — check tile sizes");
 
@@ -116,11 +127,5 @@ void load_tilemap(const std::filesystem::path &path, const std::string &tex,
                  path.string());
 }
 
-void destroy() {
-    spdlog::trace("clearing all resources");
-    for (auto tex : textures) {
-        delete tex.second;
-    };
-    textures.clear();
-}
-}  // namespace explore::managers::resource
+}  // namespace explore::manager
+
