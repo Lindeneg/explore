@@ -12,7 +12,7 @@ namespace explore::core {
 class Texture2D;
 }
 
-namespace explore::managers {
+namespace explore::manager {
 
 class ScreenManager {
    private:
@@ -56,6 +56,6 @@ class ScreenManager {
     void destroy();
 };
 
-}  // namespace explore::managers
+}  // namespace explore::manager
 
 #endif  // EXPLORE_MANAGERS_SCREEN_MANAGER_H

@@ -10,7 +10,7 @@
 static u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
                                SDL_INIT_EVENTS};
 
-namespace explore::managers {
+namespace explore::manager {
 
 ScreenManager::ScreenManager()
     : _window(nullptr),
@@ -119,7 +119,7 @@ void ScreenManager::clear() {
     SDL_RenderClear(_renderer);
 }
 
-void ScreenManager::present() {
+void ScreenManager::present() const {
     ASSERT_RET_V(_renderer);
     SDL_RenderPresent(_renderer);
 }
@@ -130,9 +130,9 @@ void ScreenManager::destroy() {
         _renderer = nullptr;
         spdlog::trace("destroyed SDL _renderer");
     }
-    if (window) {
-        SDL_DestroyWindow(window);
-        window = nullptr;
+    if (_window) {
+        SDL_DestroyWindow(_window);
+        _window = nullptr;
         spdlog::trace("destroyed SDL window");
     }
     IMG_Quit();
@@ -140,5 +140,5 @@ void ScreenManager::destroy() {
     SDL_Quit();
 }
 
-}  // namespace explore::managers
+}  // namespace explore::manager
 
