@@ -8,10 +8,10 @@ using namespace explore;
 i32 main() {
     // TODO read config file
     spdlog::set_level(spdlog::level::trace);
-    if (!managers::game::initialize()) {
+    if (!manager::game::initialize()) {
         return EXIT_FAILURE;
     }
-    managers::game::run();
-    managers::game::destroy();
+    manager::game::run();
+    manager::game::destroy();
     return EXIT_SUCCESS;
 }
