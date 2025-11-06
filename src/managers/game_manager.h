@@ -3,7 +3,7 @@
 
 #include "../common.h"
 
-namespace explore::managers::game {
+namespace explore::manager::game {
 bool initialize();
 
 void set_cap_frame_rate(bool state);
@@ -21,6 +21,6 @@ void update();
 void render();
 
 void destroy();
-}  // namespace explore::managers::game
+}  // namespace explore::manager::game
 
 #endif  // EXPLORE_MANAGERS_GAME_MANAGER_H

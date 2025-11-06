@@ -3,6 +3,11 @@
 
 #include "../ecs/ecs.h"
 
+namespace explore::manager {
+class ScreenManager;
+class ResourceManager;
+}  // namespace explore::manager
+
 namespace explore::system {
 class Render : public ecs::System {
    public:
@@ -10,7 +15,8 @@ class Render : public ecs::System {
 
     void add_entity(ecs::Entity entity) override;
 
-    void update();
+    void update(const manager::ScreenManager &screen_manager,
+                const manager::ResourceManager &resource_manager);
 };
 }  // namespace explore::system
 

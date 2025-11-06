@@ -28,16 +28,21 @@ static SDL_Event sdl_event{};
 static explore::core::GameContext game_context{};
 static explore::ecs::Registry registry{};
 static explore::event::Bus event_bus{};
+static explore::manager::ScreenManager screen_manager{};
+static explore::manager::ResourceManager resource_manager{};
 
-bool explore::managers::game::initialize() {
-    if (!screen::initialize()) {
+bool explore::manager::game::initialize() {
+    if (!screen_manager.initialize()) {
         return false;
     }
+    // TODO refactor so this isn't needed it's only used to import
+    // an image via sdl instead create an img loader class and use that instead
+    resource_manager.set_renderer(screen_manager.get_renderer());
     is_running = true;
     return true;
 }
 
-void explore::managers::game::setup() {
+void explore::manager::game::setup() {
     game_context.capped_frame_rate = true;
     game_context.sample_fps = true;
     game_context.draw_collision_rects = true;
@@ -50,26 +55,27 @@ void explore::managers::game::setup() {
     registry.add_system<system::Damage>();
     registry.add_system<system::Keyboard>();
 
-    resource::add_texture("tank-tex",
-                          FPATH("assets", "images", "tank-panther-right.png"));
+    resource_manager.add_texture(
+        "tank-tex", FPATH("assets", "images", "tank-panther-right.png"));
 
-    resource::add_texture("truck-tex",
-                          FPATH("assets", "images", "truck-ford-right.png"));
+    resource_manager.add_texture(
+        "truck-tex", FPATH("assets", "images", "truck-ford-right.png"));
 
-    resource::add_texture("chopper-tex",
-                          FPATH("assets", "images", "chopper.png"));
+    resource_manager.add_texture("chopper-tex",
+                                 FPATH("assets", "images", "chopper.png"));
 
-    resource::add_texture("radar-tex", FPATH("assets", "images", "radar.png"));
+    resource_manager.add_texture("radar-tex",
+                                 FPATH("assets", "images", "radar.png"));
 
-    resource::add_texture("tile-map",
-                          FPATH("assets", "tilemaps", "jungle.png"));
+    resource_manager.add_texture("tile-map",
+                                 FPATH("assets", "tilemaps", "jungle.png"));
 
     load_level(1u);
 }
 
-void explore::managers::game::load_level(const u32 level) {
-    resource::load_tilemap(FPATH("assets", "tilemaps", "jungle.map"),
-                           "tile-map", 32u, 32u, 2u, 25u, 20u, registry);
+void explore::manager::game::load_level(const u32 level) {
+    resource_manager.load_tilemap(FPATH("assets", "tilemaps", "jungle.map"),
+                                  "tile-map", 32u, 32u, 2u, 25u, 20u, registry);
 
     ecs::Entity chopper{registry.create_entity("chopper")};
     chopper.add_component<component::Transform>(glm::vec2(10.f, 10.f),
@@ -81,8 +87,8 @@ void explore::managers::game::load_level(const u32 level) {
 
     ecs::Entity radar{registry.create_entity("radar")};
     radar.add_component<component::Transform>(
-        glm::vec2(screen::get_dimensions().x - 72.f, 8.f), glm::vec2(1.f, 1.f),
-        0.f);
+        glm::vec2(screen_manager.get_dimensions().x - 72.f, 8.f),
+        glm::vec2(1.f, 1.f), 0.f);
     radar.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
     radar.add_component<component::Sprite>("radar-tex", 2u,
                                            core::rect(0, 0, 64, 64));
@@ -105,7 +111,7 @@ void explore::managers::game::load_level(const u32 level) {
     truck.add_component<component::BoxCollider>(32u, 32u);
 }
 
-void explore::managers::game::run() {
+void explore::manager::game::run() {
     setup();
     while (is_running) {
         process_input();
@@ -115,7 +121,7 @@ void explore::managers::game::run() {
     }
 }
 
-void explore::managers::game::process_input() {
+void explore::manager::game::process_input() {
     while (SDL_PollEvent(&sdl_event)) {
         switch (sdl_event.type) {
             case SDL_QUIT:
@@ -137,7 +143,7 @@ void explore::managers::game::process_input() {
     }
 }
 
-void explore::managers::game::update() {
+void explore::manager::game::update() {
     game_context.update_delta_time();
 
     event_bus.reset();
@@ -152,20 +158,21 @@ void explore::managers::game::update() {
     registry.update();
 }
 
-void explore::managers::game::render() {
-    screen::set_draw_color(color::black);
-    screen::clear();
+void explore::manager::game::render() {
+    screen_manager.set_draw_color(color::black);
+    screen_manager.clear();
 
-    registry.get_system<system::Render>().update();
+    registry.get_system<system::Render>().update(screen_manager,
+                                                 resource_manager);
 
     if (game_context.draw_collision_rects) {
-        registry.get_system<system::DebugRender>().update();
+        registry.get_system<system::DebugRender>().update(screen_manager);
     }
 
-    screen::present();
+    screen_manager.present();
 }
 
-void explore::managers::game::destroy() {
-    resource::destroy();
-    screen::destroy();
+void explore::manager::game::destroy() {
+    // delete resource_manager;
+    screen_manager.destroy();
 }

@@ -1,6 +1,7 @@
 #include "render.h"
 
 #include "../core/rect.h"
+#include "../core/texture2d.h"
 #include "../ecs/components.h"
 #include "../managers/resource_manager.h"
 #include "../managers/screen_manager.h"
@@ -26,24 +27,25 @@ void Render::add_entity(ecs::Entity entity) {
     _entities.insert(it, entity);
 }
 
-void Render::update() {
+void Render::update(const manager::ScreenManager &screen_manager,
+                    const manager::ResourceManager &resource_manager) {
     for (const auto &entity : get_entities()) {
         const auto transform = entity.get_component<component::Transform>();
         const auto sprite{entity.get_component<component::Sprite>()};
 
         if (transform.scale.x == 0 && transform.scale.y == 0) continue;
 
-        auto opt_texture{managers::resource::get_texture(sprite.texture_name)};
+        auto opt_texture{resource_manager.get_texture(sprite.texture_name)};
         ASSERT_RET_V(opt_texture.has_value());
-        auto texture{opt_texture.value()};
+        const core::Texture2D &texture{opt_texture->get()};
 
         const auto scaled_w =
             static_cast<u32>(sprite.src_rect.w * transform.scale.x);
         const auto scaled_h =
             static_cast<u32>(sprite.src_rect.h * transform.scale.y);
 
-        managers::screen::draw_texture(
-            *texture, sprite.src_rect,
+        screen_manager.draw_texture(
+            texture, sprite.src_rect,
             core::rect(transform.position, scaled_w, scaled_h),
             transform.rotation);
     }

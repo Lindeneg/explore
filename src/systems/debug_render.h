@@ -3,12 +3,16 @@
 
 #include "../ecs/ecs.h"
 
+namespace explore::manager {
+class ScreenManager;
+}
+
 namespace explore::system {
 class DebugRender : public ecs::System {
    public:
     DebugRender();
 
-    void update();
+    void update(manager::ScreenManager &screen_manager);
 };
 }  // namespace explore::system
 
