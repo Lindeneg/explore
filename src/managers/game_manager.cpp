@@ -57,8 +57,8 @@ void GameManager::_setup() {
     _resource_manager.add_texture(
         "truck-tex", FPATH("assets", "images", "truck-ford-right.png"));
 
-    _resource_manager.add_texture("chopper-tex",
-                                  FPATH("assets", "images", "chopper.png"));
+    _resource_manager.add_texture(
+        "chopper-tex", FPATH("assets", "images", "chopper-spritesheet.png"));
 
     _resource_manager.add_texture("radar-tex",
                                   FPATH("assets", "images", "radar.png"));
@@ -81,6 +81,10 @@ void GameManager::_load_level(const u32 level) {
     chopper.add_component<component::Sprite>("chopper-tex", 1u,
                                              core::rect(0, 0, 32, 32));
     chopper.add_component<component::Animation>(2u, 15u, true);
+
+    chopper.add_component<component::KeyboardControl>(
+        glm::vec2(0, -20), glm::vec2(20, 0), glm::vec2(0, 20),
+        glm::vec2(-20, 0));
 
     ecs::Entity radar{_registry.create_entity("radar")};
     radar.add_component<component::Transform>(
