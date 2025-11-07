@@ -1,25 +1,42 @@
 #ifndef EXPLORE_MANAGERS_GAME_MANAGER_H
 #define EXPLORE_MANAGERS_GAME_MANAGER_H
 
+#include <SDL2/SDL_events.h>
+
 #include "../common.h"
+#include "../core/game_context.h"
+#include "../ecs/ecs.h"
+#include "../events/bus.h"
+#include "./resource_manager.h"
+#include "./screen_manager.h"
 
-namespace explore::manager::game {
-bool initialize();
+namespace explore::manager {
+class GameManager {
+   private:
+    bool _running;
+    SDL_Event _sdl_event;
 
-void set_cap_frame_rate(bool state);
+    core::GameContext _game_context;
+    ecs::Registry _registry;
+    event::Bus _event_bus;
+    manager::ScreenManager _screen_manager;
+    manager::ResourceManager _resource_manager;
 
-void setup();
+   public:
+    GameManager() = default;
+    ~GameManager() = default;
 
-void load_level(u32 level);
+    bool initialize();
+    void run();
 
-void run();
+   private:
+    void _setup();
+    void _load_level(u32 level);
+    void _process_input();
+    void _update();
+    void _render();
+};
 
-void process_input();
-
-void update();
-
-void render();
-
-}  // namespace explore::manager::game
+}  // namespace explore::manager
 
 #endif  // EXPLORE_MANAGERS_GAME_MANAGER_H
