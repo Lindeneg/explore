@@ -1,6 +1,8 @@
 #ifndef EXPLORE_SYSTEMS_RENDER_H_
 #define EXPLORE_SYSTEMS_RENDER_H_
 
+#include <SDL_rect.h>
+
 #include "../ecs/ecs.h"
 
 namespace explore::manager {
@@ -16,7 +18,8 @@ class Render : public ecs::System {
     void add_entity(ecs::Entity entity) override;
 
     void update(const manager::ScreenManager &screen_manager,
-                const manager::ResourceManager &resource_manager);
+                const manager::ResourceManager &resource_manager,
+                const SDL_Rect &camera);
 };
 }  // namespace explore::system
 

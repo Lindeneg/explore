@@ -11,6 +11,14 @@ namespace explore::core {
 /* contains game-specific information and configuration */
 class GameContext {
    public:
+    // TODO consider making private and then using getters
+
+    u32 window_width;
+    u32 window_height;
+
+    u32 map_width;
+    u32 map_height;
+
     f64 delta_time;
 
     bool draw_collision_rects;
@@ -19,7 +27,11 @@ class GameContext {
 
    public:
     GameContext()
-        : delta_time(0.0f),
+        : window_width(0),
+          window_height(0),
+          map_width(0),
+          map_height(0),
+          delta_time(0.0f),
           draw_collision_rects(false),
           capped_frame_rate(false),
           sample_fps(false),
@@ -37,6 +49,7 @@ class GameContext {
     u64 _previous_frame_time;
 
    private:
+    // TODO this function does not belong here
     void _cap_frame_rate() const;
 };
 }  // namespace explore::core

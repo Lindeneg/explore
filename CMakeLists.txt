@@ -107,6 +107,7 @@ add_executable(ExploreApp
         src/systems/debug_render.cpp
         src/systems/damage.cpp
         src/systems/keyboard.cpp
+        src/systems/camera_movement.cpp
 )
 
 add_custom_command(TARGET ExploreApp POST_BUILD

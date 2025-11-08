@@ -10,6 +10,7 @@
 #include "../ecs/components.h"
 #include "../events/key_pressed.h"
 #include "../systems/animation.h"
+#include "../systems/camera_movement.h"
 #include "../systems/collision.h"
 #include "../systems/damage.h"
 #include "../systems/debug_render.h"
@@ -23,7 +24,21 @@ bool GameManager::initialize() {
     if (!_screen_manager.initialize()) {
         return false;
     }
+
     _resource_manager.set_renderer(_screen_manager.get_renderer());
+
+    auto dimensions{_screen_manager.get_dimensions()};
+
+    _camera.x = 0;
+    _camera.y = 0;
+    _camera.w = dimensions.x;
+    _camera.h = dimensions.y;
+
+    // TODO instead of keeping track of window dimensions
+    // multiple places, have a single source of truth
+    _game_context.window_width = dimensions.x;
+    _game_context.window_height = dimensions.y;
+
     _running = true;
     return true;
 }
@@ -50,6 +65,7 @@ void GameManager::_setup() {
     _registry.add_system<system::DebugRender>();
     _registry.add_system<system::Damage>();
     _registry.add_system<system::Keyboard>();
+    _registry.add_system<system::CameraMovement>();
 
     _resource_manager.add_texture(
         "tank-tex", FPATH("assets", "images", "tank-panther-right.png"));
@@ -71,8 +87,12 @@ void GameManager::_setup() {
 
 void GameManager::_load_level(const u32 level) {
     _resource_manager.load_tilemap(FPATH("assets", "tilemaps", "jungle.map"),
-                                   "tile-map", 32u, 32u, 2u, 25u, 20u,
+                                   "tile-map", 32u, 32u, 3u, 25u, 20u,
                                    _registry);
+
+    // TODO make some tilemap abstraction
+    _game_context.map_width = 25 * 32 * 3;
+    _game_context.map_height = 20 * 32 * 3;
 
     ecs::Entity chopper{_registry.create_entity("chopper")};
     chopper.add_component<component::Transform>(glm::vec2(10.f, 10.f),
@@ -83,8 +103,9 @@ void GameManager::_load_level(const u32 level) {
     chopper.add_component<component::Animation>(2u, 15u, true);
 
     chopper.add_component<component::KeyboardControl>(
-        glm::vec2(0, -20), glm::vec2(20, 0), glm::vec2(0, 20),
-        glm::vec2(-20, 0));
+        glm::vec2(0, -150), glm::vec2(150, 0), glm::vec2(0, 150),
+        glm::vec2(-150, 0));
+    chopper.add_component<component::CameraFollow>();
 
     ecs::Entity radar{_registry.create_entity("radar")};
     radar.add_component<component::Transform>(
@@ -95,21 +116,21 @@ void GameManager::_load_level(const u32 level) {
                                            core::rect(0, 0, 64, 64));
     radar.add_component<component::Animation>(8u, 5u, true);
 
-    ecs::Entity tank{_registry.create_entity("tank")};
-    tank.add_component<component::Transform>(glm::vec2(250.f, 10.f),
-                                             glm::vec2(2.f, 2.f), 0.f);
-    tank.add_component<component::RigidBody>(glm::vec2(-30.f, 0.f));
-    tank.add_component<component::Sprite>("tank-tex", 2u,
-                                          core::rect(0, 0, 32, 32));
-    tank.add_component<component::BoxCollider>(32u, 32u);
-
-    ecs::Entity truck{_registry.create_entity("truck")};
-    truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
-                                              glm::vec2(1.f, 1.f), 0.f);
-    truck.add_component<component::RigidBody>(glm::vec2(20.f, 0.f));
-    truck.add_component<component::Sprite>("truck-tex", 2u,
-                                           core::rect(0, 0, 32, 32));
-    truck.add_component<component::BoxCollider>(32u, 32u);
+    //    ecs::Entity tank{_registry.create_entity("tank")};
+    //    tank.add_component<component::Transform>(glm::vec2(250.f, 10.f),
+    //                                             glm::vec2(2.f, 2.f), 0.f);
+    //    tank.add_component<component::RigidBody>(glm::vec2(-30.f, 0.f));
+    //    tank.add_component<component::Sprite>("tank-tex", 2u,
+    //                                          core::rect(0, 0, 32, 32));
+    //    tank.add_component<component::BoxCollider>(32u, 32u);
+    //
+    //    ecs::Entity truck{_registry.create_entity("truck")};
+    //    truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
+    //                                              glm::vec2(1.f, 1.f), 0.f);
+    //    truck.add_component<component::RigidBody>(glm::vec2(20.f, 0.f));
+    //    truck.add_component<component::Sprite>("truck-tex", 2u,
+    //                                           core::rect(0, 0, 32, 32));
+    //    truck.add_component<component::BoxCollider>(32u, 32u);
 }
 
 void GameManager::_process_input() {
@@ -145,6 +166,8 @@ void GameManager::_update() {
     _registry.get_system<system::Movement>().update(_game_context.delta_time);
     _registry.get_system<system::Animation>().update();
     _registry.get_system<system::Collision>().update(_event_bus);
+    _registry.get_system<system::CameraMovement>().update(_camera,
+                                                          _game_context);
 
     _registry.update();
 }
@@ -154,7 +177,7 @@ void GameManager::_render() {
     _screen_manager.clear();
 
     _registry.get_system<system::Render>().update(_screen_manager,
-                                                  _resource_manager);
+                                                  _resource_manager, _camera);
 
     if (_game_context.draw_collision_rects) {
         _registry.get_system<system::DebugRender>().update(_screen_manager);

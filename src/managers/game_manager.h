@@ -15,6 +15,7 @@ class GameManager {
    private:
     bool _running;
     SDL_Event _sdl_event;
+    SDL_Rect _camera;
 
     core::GameContext _game_context;
     ecs::Registry _registry;

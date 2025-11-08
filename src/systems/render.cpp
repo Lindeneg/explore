@@ -28,7 +28,8 @@ void Render::add_entity(ecs::Entity entity) {
 }
 
 void Render::update(const manager::ScreenManager &screen_manager,
-                    const manager::ResourceManager &resource_manager) {
+                    const manager::ResourceManager &resource_manager,
+                    const SDL_Rect &camera) {
     for (const auto &entity : get_entities()) {
         const auto transform = entity.get_component<component::Transform>();
         const auto sprite{entity.get_component<component::Sprite>()};
@@ -44,10 +45,12 @@ void Render::update(const manager::ScreenManager &screen_manager,
         const auto scaled_h =
             static_cast<u32>(sprite.src_rect.h * transform.scale.y);
 
-        screen_manager.draw_texture(
-            texture, sprite.src_rect,
-            core::rect(transform.position, scaled_w, scaled_h),
-            transform.rotation);
+        const auto position{glm::vec2(transform.position.x - camera.x,
+                                      transform.position.y - camera.y)};
+
+        screen_manager.draw_texture(texture, sprite.src_rect,
+                                    core::rect(position, scaled_w, scaled_h),
+                                    transform.rotation);
     }
 }
 

@@ -81,6 +81,10 @@ struct KeyboardControl {
           left_velocity(left_velocity) {}
 };
 
+struct CameraFollow {
+    CameraFollow() = default;
+};
+
 }  // namespace explore::component
 
 #endif  // EXPLORE_ECS_COMPONENTS_H_

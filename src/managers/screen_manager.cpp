@@ -5,7 +5,7 @@
 #include <spdlog/spdlog.h>
 
 #include "../core/texture2d.h"
-#include "resource_manager.h"
+#include "./resource_manager.h"
 
 static u32 sdl_subsystem_flags{SDL_INIT_VIDEO | SDL_INIT_TIMER |
                                SDL_INIT_EVENTS};
