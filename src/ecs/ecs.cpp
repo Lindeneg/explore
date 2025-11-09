@@ -127,6 +127,8 @@ void Registry::remove_entity_from_systems(Entity entity) {
     for (auto system : _systems) {
         system.second->remove_entity(entity);
     }
+    spdlog::trace("entity removed: id->'{}' name->'{}'", entity.get_id(),
+                  entity.get_name());
 }
 
 void Registry::kill_entity(Entity entity) {

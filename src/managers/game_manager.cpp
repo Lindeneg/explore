@@ -7,6 +7,7 @@
 #include "../core/file.h"
 #include "../core/game_context.h"
 #include "../core/rect.h"
+#include "../core/tilemap.h"
 #include "../ecs/components.h"
 #include "../events/key_pressed.h"
 #include "../systems/animation.h"
@@ -79,20 +80,22 @@ void GameManager::_setup() {
     _resource_manager.add_texture("radar-tex",
                                   FPATH("assets", "images", "radar.png"));
 
-    _resource_manager.add_texture("tile-map",
+    _resource_manager.add_texture("jungle",
                                   FPATH("assets", "tilemaps", "jungle.png"));
+
+    _resource_manager.add_tilemap(_registry, "tilemap", 32u, 32u, 3u);
 
     _load_level(1u);
 }
 
 void GameManager::_load_level(const u32 level) {
-    _resource_manager.load_tilemap(FPATH("assets", "tilemaps", "jungle.map"),
-                                   "tile-map", 32u, 32u, 3u, 25u, 20u,
-                                   _registry);
+    _resource_manager.load_tilemap(
+        "level_1", FPATH("assets", "tilemaps", "jungle.map"), "jungle");
 
-    // TODO make some tilemap abstraction
-    _game_context.map_width = 25 * 32 * 3;
-    _game_context.map_height = 20 * 32 * 3;
+    auto map_size{_resource_manager.loaded_tilemap_dimensions()};
+
+    _game_context.map_width = map_size.x;   // 25 * 32 * 3;
+    _game_context.map_height = map_size.y;  // 20 * 32 * 3;
 
     ecs::Entity chopper{_registry.create_entity("chopper")};
     chopper.add_component<component::Transform>(glm::vec2(10.f, 10.f),
