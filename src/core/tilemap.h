@@ -16,6 +16,8 @@ class Entity;
 namespace explore::core {
 class Texture2D;
 
+// TODO: make this mess a lot better, so many things not considered
+// multiple textures, multuple maps etc.
 class Tilemap {
    public:
     Tilemap(explore::ecs::Registry &registry, std::string name, u32 tile_width,

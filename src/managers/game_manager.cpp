@@ -90,12 +90,12 @@ void GameManager::_setup() {
 
 void GameManager::_load_level(const u32 level) {
     _resource_manager.load_tilemap(
-        "level_1", FPATH("assets", "tilemaps", "jungle.map"), "jungle");
+        "tilemap", FPATH("assets", "tilemaps", "jungle.map"), "jungle");
 
     auto map_size{_resource_manager.loaded_tilemap_dimensions()};
 
-    _game_context.map_width = map_size.x;   // 25 * 32 * 3;
-    _game_context.map_height = map_size.y;  // 20 * 32 * 3;
+    _game_context.map_width = map_size.x;
+    _game_context.map_height = map_size.y;
 
     ecs::Entity chopper{_registry.create_entity("chopper")};
     chopper.add_component<component::Transform>(glm::vec2(10.f, 10.f),
