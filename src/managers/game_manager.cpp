@@ -17,6 +17,7 @@
 #include "../systems/debug_render.h"
 #include "../systems/keyboard.h"
 #include "../systems/movement.h"
+#include "../systems/projectile_emit.h"
 #include "../systems/render.h"
 
 namespace explore::manager {
@@ -67,6 +68,7 @@ void GameManager::_setup() {
     _registry.add_system<system::Damage>();
     _registry.add_system<system::Keyboard>();
     _registry.add_system<system::CameraMovement>();
+    _registry.add_system<system::ProjectileEmit>();
 
     _resource_manager.add_texture(
         "tank-tex", FPATH("assets", "images", "tank-panther-right.png"));
@@ -79,6 +81,9 @@ void GameManager::_setup() {
 
     _resource_manager.add_texture("radar-tex",
                                   FPATH("assets", "images", "radar.png"));
+
+    _resource_manager.add_texture("bullet-tex",
+                                  FPATH("assets", "images", "bullet.png"));
 
     _resource_manager.add_texture("jungle",
                                   FPATH("assets", "tilemaps", "jungle.png"));
@@ -119,21 +124,25 @@ void GameManager::_load_level(const u32 level) {
                                            core::rect(0, 0, 64, 64));
     radar.add_component<component::Animation>(8u, 5u, true);
 
-    //    ecs::Entity tank{_registry.create_entity("tank")};
-    //    tank.add_component<component::Transform>(glm::vec2(250.f, 10.f),
-    //                                             glm::vec2(2.f, 2.f), 0.f);
-    //    tank.add_component<component::RigidBody>(glm::vec2(-30.f, 0.f));
-    //    tank.add_component<component::Sprite>("tank-tex", 2u,
-    //                                          core::rect(0, 0, 32, 32));
-    //    tank.add_component<component::BoxCollider>(32u, 32u);
-    //
-    //    ecs::Entity truck{_registry.create_entity("truck")};
-    //    truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
-    //                                              glm::vec2(1.f, 1.f), 0.f);
-    //    truck.add_component<component::RigidBody>(glm::vec2(20.f, 0.f));
-    //    truck.add_component<component::Sprite>("truck-tex", 2u,
-    //                                           core::rect(0, 0, 32, 32));
-    //    truck.add_component<component::BoxCollider>(32u, 32u);
+    ecs::Entity tank{_registry.create_entity("tank")};
+    tank.add_component<component::Transform>(glm::vec2(250.f, 10.f),
+                                             glm::vec2(2.f, 2.f), 0.f);
+    tank.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
+    tank.add_component<component::Sprite>("tank-tex", 2u,
+                                          core::rect(0, 0, 32, 32));
+    tank.add_component<component::BoxCollider>(32u, 32u);
+    tank.add_component<component::ProjectileEmitter>(glm::vec2(100.0, 0.0),
+                                                     5000u, 10000u, 0u, false);
+
+    ecs::Entity truck{_registry.create_entity("truck")};
+    truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
+                                              glm::vec2(1.f, 1.f), 0.f);
+    truck.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
+    truck.add_component<component::Sprite>("truck-tex", 2u,
+                                           core::rect(0, 0, 32, 32));
+    truck.add_component<component::BoxCollider>(32u, 32u);
+    truck.add_component<component::ProjectileEmitter>(glm::vec2(0, 100.0),
+                                                      2000u, 10000u, 0u, false);
 }
 
 void GameManager::_process_input() {
@@ -169,6 +178,7 @@ void GameManager::_update() {
     _registry.get_system<system::Movement>().update(_game_context.delta_time);
     _registry.get_system<system::Animation>().update();
     _registry.get_system<system::Collision>().update(_event_bus);
+    _registry.get_system<system::ProjectileEmit>().update(_registry);
     _registry.get_system<system::CameraMovement>().update(_camera,
                                                           _game_context);
 
