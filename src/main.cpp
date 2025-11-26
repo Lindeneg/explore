@@ -5,7 +5,7 @@
 
 i32 main() {
     // TODO read config file or use argument vector
-    spdlog::set_level(spdlog::level::trace);
+    spdlog::set_level(spdlog::level::debug);
     explore::manager::GameManager game_manager{};
     if (!game_manager.initialize()) {
         return EXIT_FAILURE;

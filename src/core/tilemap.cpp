@@ -93,8 +93,8 @@ bool Tilemap::load(const std::filesystem::path &path,
     _map_width = x;
     _map_height = y;
     _is_loaded = true;
-    spdlog::info("tilemap '{}' loaded with '{}x{}' tiles from '{}'", _name,
-                 _map_width, _map_height, path.string());
+    spdlog::debug("tilemap '{}' loaded with '{}x{}' tiles from '{}'", _name,
+                  _map_width, _map_height, path.string());
     return _is_loaded;
 }
 
@@ -110,7 +110,7 @@ bool Tilemap::unload() {
     _map_height = 0;
     _is_loaded = false;
 
-    spdlog::info("tilemap '{}' unloaded", _name);
+    spdlog::debug("tilemap '{}' unloaded", _name);
 
     return true;
 }

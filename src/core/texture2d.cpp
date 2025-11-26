@@ -27,15 +27,15 @@ bool Texture2D::initialize(SDL_Renderer *renderer) {
 
     SDL_FreeSurface(surface);
 
-    spdlog::trace("initialized texture '{}' with path '{}'", _name,
-                  _path.string());
+    spdlog::debug("TEXTURE: initialized '{}' '{}x{}' with path '{}'", _name,
+                  _width, _height, _path.string());
 
     _data = sdl_texture;
     return true;
 }
 
 Texture2D::~Texture2D() {
-    spdlog::trace("destroying texture: '{}'", _name);
+    spdlog::debug("destroying texture: '{}'", _name);
     SDL_DestroyTexture(_data);
     _data = nullptr;
 }
