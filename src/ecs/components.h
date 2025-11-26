@@ -85,6 +85,28 @@ struct CameraFollow {
     CameraFollow() = default;
 };
 
+struct ProjectileEmitter {
+    glm::vec2 velocity;
+
+    u32 interval;
+    u32 duration;
+    u32 hit_percent_damage;
+    u32 last_emission_time;
+
+    bool friendly;
+
+    ProjectileEmitter(glm::vec2 velocity = glm::vec2(0), u32 interval = 0,
+                      u32 duration = 10000, u32 hit_percent_damage = 10,
+                      bool friendly = false)
+        : velocity(velocity),
+          interval(interval),
+          duration(duration),
+          hit_percent_damage(hit_percent_damage),
+          friendly(friendly) {
+        this->last_emission_time = SDL_GetTicks();
+    }
+};
+
 }  // namespace explore::component
 
 #endif  // EXPLORE_ECS_COMPONENTS_H_
