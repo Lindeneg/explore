@@ -48,7 +48,7 @@ bool System::remove_entity(Entity entity) {
         std::remove_if(_entities.begin(), _entities.end(),
                        [&entity](Entity other) { return entity == other; })};
     if (iter != _entities.end()) {
-        spdlog::debug("removed entity '{}:{}' from '{}'", entity.get_id(),
+        spdlog::trace("removed entity '{}:{}' from '{}'", entity.get_id(),
                       entity.get_name(), _name);
         _entities.erase(iter, _entities.end());
         return true;
@@ -57,6 +57,8 @@ bool System::remove_entity(Entity entity) {
 }
 
 const std::vector<Entity> &System::get_entities() const { return _entities; }
+
+std::vector<Entity> &System::get_entities_m() { return _entities; }
 
 const Signature &System::get_comp_signature() const {
     return _component_signature;

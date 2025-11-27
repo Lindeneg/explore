@@ -18,7 +18,7 @@ void Damage::subscribe_to_events(event::Bus &event_bus) {
 }
 
 void Damage::on_collision(event::Collision &event) {
-    spdlog::debug("collision between '{}:{}' and '{}:{}'", event.a.get_id(),
+    spdlog::trace("collision between '{}:{}' and '{}:{}'", event.a.get_id(),
                   event.a.get_name(), event.b.get_id(), event.b.get_name());
 
     //    event.a.kill();

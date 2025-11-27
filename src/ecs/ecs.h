@@ -107,6 +107,7 @@ class System {
     ~System() = default;
 
     const std::vector<Entity> &get_entities() const;
+    std::vector<Entity> &get_entities_m();
     const Signature &get_comp_signature() const;
 
     template <typename TComponent>
