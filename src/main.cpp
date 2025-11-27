@@ -7,7 +7,7 @@
 #include "./managers/game_manager.h"
 
 i32 main(int argc, char **argv) {
-    auto log_level{spdlog::level::info};
+    auto log_level{spdlog::level::debug};
     for (int i = 0; i < argc; i++) {
         std::string key{argv[i]};
 
