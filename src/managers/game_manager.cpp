@@ -113,8 +113,8 @@ void GameManager::_load_level(const u32 level) {
     chopper.add_component<component::Animation>(2u, 15u, true);
 
     chopper.add_component<component::KeyboardControl>(
-        glm::vec2(0, -100), glm::vec2(100, 0), glm::vec2(0, 100),
-        glm::vec2(-100, 0));
+        glm::vec2(0, -50), glm::vec2(50, 0), glm::vec2(0, 50),
+        glm::vec2(-50, 0));
     chopper.add_component<component::CameraFollow>();
     chopper.add_component<component::Health>(100u);
     chopper.add_component<component::ProjectileEmitter>(glm::vec2(150.0, 150.0),
