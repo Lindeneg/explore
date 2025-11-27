@@ -110,6 +110,7 @@ add_executable(ExploreApp
         src/systems/keyboard.cpp
         src/systems/camera_movement.cpp
         src/systems/projectile_emit.cpp
+        src/systems/projectile_lifecycle.cpp
 )
 
 add_custom_command(TARGET ExploreApp POST_BUILD

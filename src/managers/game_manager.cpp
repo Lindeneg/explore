@@ -18,6 +18,7 @@
 #include "../systems/keyboard.h"
 #include "../systems/movement.h"
 #include "../systems/projectile_emit.h"
+#include "../systems/projectile_lifecycle.h"
 #include "../systems/render.h"
 
 namespace explore::manager {
@@ -69,6 +70,7 @@ void GameManager::_setup() {
     _registry.add_system<system::Keyboard>();
     _registry.add_system<system::CameraMovement>();
     _registry.add_system<system::ProjectileEmit>();
+    _registry.add_system<system::ProjectileLifecycle>();
 
     _resource_manager.add_texture(
         "tank-tex", FPATH("assets", "images", "tank-panther-right.png"));
@@ -114,6 +116,7 @@ void GameManager::_load_level(const u32 level) {
         glm::vec2(0, -150), glm::vec2(150, 0), glm::vec2(0, 150),
         glm::vec2(-150, 0));
     chopper.add_component<component::CameraFollow>();
+    chopper.add_component<component::Health>(100u);
 
     ecs::Entity radar{_registry.create_entity("radar")};
     radar.add_component<component::Transform>(
@@ -132,7 +135,8 @@ void GameManager::_load_level(const u32 level) {
                                           core::rect(0, 0, 32, 32));
     tank.add_component<component::BoxCollider>(32u, 32u);
     tank.add_component<component::ProjectileEmitter>(glm::vec2(100.0, 0.0),
-                                                     5000u, 10000u, 0u, false);
+                                                     5000u, 3000u, 0u, false);
+    tank.add_component<component::Health>(100u);
 
     ecs::Entity truck{_registry.create_entity("truck")};
     truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
@@ -142,7 +146,8 @@ void GameManager::_load_level(const u32 level) {
                                            core::rect(0, 0, 32, 32));
     truck.add_component<component::BoxCollider>(32u, 32u);
     truck.add_component<component::ProjectileEmitter>(glm::vec2(0, 100.0),
-                                                      2000u, 10000u, 0u, false);
+                                                      2000u, 5000u, 0u, false);
+    truck.add_component<component::Health>(100u);
 }
 
 void GameManager::_process_input() {
@@ -179,6 +184,7 @@ void GameManager::_update() {
     _registry.get_system<system::Animation>().update();
     _registry.get_system<system::Collision>().update(_event_bus);
     _registry.get_system<system::ProjectileEmit>().update(_registry);
+    _registry.get_system<system::ProjectileLifecycle>().update();
     _registry.get_system<system::CameraMovement>().update(_camera,
                                                           _game_context);
 
