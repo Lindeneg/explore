@@ -30,11 +30,18 @@ void ProjectileEmit::update(ecs::Registry &registry) {
             }
 
             auto projectile{registry.create_entity()};
+
+            projectile.add_component<component::Projectile>(
+                emitter.hit_percent_damage, emitter.duration, emitter.friendly);
+
             projectile.add_component<component::Transform>(
                 projectile_position, glm::vec2(1.0, 1.0), 0.0);
+
             projectile.add_component<component::RigidBody>(emitter.velocity);
+
             projectile.add_component<component::Sprite>("bullet-tex", 5u,
                                                         core::rect(0, 0, 4, 4));
+
             projectile.add_component<component::BoxCollider>(4u, 4u);
 
             emitter.last_emission_time = SDL_GetTicks();

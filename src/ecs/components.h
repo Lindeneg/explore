@@ -85,6 +85,7 @@ struct CameraFollow {
     CameraFollow() = default;
 };
 
+// entity that is capable of emitting projectiles
 struct ProjectileEmitter {
     glm::vec2 velocity;
 
@@ -105,6 +106,27 @@ struct ProjectileEmitter {
           friendly(friendly) {
         this->last_emission_time = SDL_GetTicks();
     }
+};
+
+// entity that is the actual projectile being emitted
+struct Projectile {
+    u32 hit_percent_damage;
+    u32 duration;
+    u32 start_time;
+    bool friendly;
+
+    Projectile(u32 hit_percent_damage = 0, u32 duration = 0,
+               bool friendly = false)
+        : hit_percent_damage(hit_percent_damage),
+          duration(duration),
+          start_time(SDL_GetTicks()),
+          friendly(friendly) {}
+};
+
+struct Health {
+    u32 hp_percent;
+
+    Health(u32 hp_percent = 0) : hp_percent(hp_percent) {}
 };
 
 }  // namespace explore::component
