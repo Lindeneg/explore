@@ -70,6 +70,7 @@ bool Tilemap::load(const std::filesystem::path &path,
                                         _tile_height)};
 
                 explore::ecs::Entity tile = _registry.create_entity();
+                tile.add_group("tiles");
 
                 glm::vec2 pos{
                     static_cast<float>(x * _tile_width * _tile_scale),

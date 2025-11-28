@@ -77,6 +77,7 @@ void Registry::update() {
     _entities_add_queue.clear();
 
     for (auto entity : _entities_kill_queue) {
+        // TODO also remove entity from groups and tags
         const u32 id{entity.get_id()};
         remove_entity_from_systems(entity);
         _free_ids.push_back(id);
