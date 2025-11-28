@@ -109,6 +109,91 @@ Entity Registry::create_entity(const std::string_view entity_name) {
     return entity;
 }
 
+void Entity::add_tag(const std::string &tag) {
+    ASSERT_RET_V_MSG(_registry, "registry is null");
+    _registry->add_tag(*this, tag);
+}
+
+bool Entity::has_tag(const std::string &tag) const {
+    ASSERT_RET_MSG(_registry, false, "registry is null");
+    return _registry->has_tag(*this, tag);
+}
+
+void Entity::remove_tag() {
+    ASSERT_RET_V_MSG(_registry, "registry is null");
+    _registry->remove_tag(*this);
+}
+
+void Entity::add_group(const std::string &group) {
+    ASSERT_RET_V_MSG(_registry, "registry is null");
+    _registry->add_group(*this, group);
+}
+
+bool Entity::has_group(const std::string &group) const {
+    ASSERT_RET_MSG(_registry, false, "registry is null");
+    return _registry->has_group(*this, group);
+}
+
+void Entity::remove_from_group() {
+    ASSERT_RET_V_MSG(_registry, "registry is null");
+    _registry->remove_from_group(*this);
+}
+
+void Registry::add_tag(Entity entity, const std::string &tag) {
+    _entity_per_tag.emplace(tag, entity);
+    _tag_per_entity.emplace(entity.get_id(), tag);
+}
+
+bool Registry::has_tag(Entity entity, const std::string &tag) const {
+    if (_tag_per_entity.find(entity.get_id()) == _tag_per_entity.end()) {
+        return false;
+    }
+    return _entity_per_tag.find(tag)->second == entity;
+}
+
+Entity Registry::get_by_tag(const std::string &tag) const {
+    return _entity_per_tag.at(tag);
+}
+
+void Registry::remove_tag(Entity entity) {
+    auto tagged_entity{_tag_per_entity.find(entity.get_id())};
+    if (tagged_entity != _tag_per_entity.end()) {
+        auto tag{tagged_entity->second};
+        _entity_per_tag.erase(tag);
+        _tag_per_entity.erase(tagged_entity);
+    }
+}
+
+void Registry::add_group(Entity entity, const std::string &group) {
+    _entities_per_group.emplace(group, std::set<Entity>());
+    _entities_per_group[group].emplace(entity);
+    _group_per_entity.emplace(entity.get_id(), group);
+}
+
+bool Registry::has_group(Entity entity, const std::string &group) const {
+    auto group_entities{_entities_per_group.at(group)};
+    return group_entities.find(entity) != group_entities.end();
+}
+
+std::vector<Entity> Registry::get_by_group(const std::string &group) const {
+    auto &entities_set{_entities_per_group.at(group)};
+    return std::vector<Entity>(entities_set.begin(), entities_set.end());
+}
+
+void Registry::remove_from_group(Entity entity) {
+    auto grouped_entity{_group_per_entity.find(entity.get_id())};
+    if (grouped_entity != _group_per_entity.end()) {
+        auto group{_entities_per_group.find(grouped_entity->second)};
+        if (group != _entities_per_group.end()) {
+            auto entity_in_group{group->second.find(entity)};
+            if (entity_in_group != group->second.end()) {
+                group->second.erase(entity_in_group);
+            }
+        }
+        _group_per_entity.erase(grouped_entity);
+    }
+}
+
 void Registry::add_entity_to_systems(Entity entity) {
     const auto entity_id{entity.get_id()};
     const auto &entity_comp_signature{_entity_comp_signatures[entity_id]};

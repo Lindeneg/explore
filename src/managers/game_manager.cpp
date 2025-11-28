@@ -105,6 +105,7 @@ void GameManager::_load_level(const u32 level) {
     _game_context.map_height = map_size.y;
 
     ecs::Entity chopper{_registry.create_entity("chopper")};
+    chopper.add_tag("player");
     chopper.add_component<component::Transform>(glm::vec2(10.f, 10.f),
                                                 glm::vec2(1.f, 1.f), 0.f);
     chopper.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
@@ -130,6 +131,7 @@ void GameManager::_load_level(const u32 level) {
     radar.add_component<component::Animation>(8u, 5u, true);
 
     ecs::Entity tank{_registry.create_entity("tank")};
+    tank.add_group("enemies");
     tank.add_component<component::Transform>(glm::vec2(250.f, 10.f),
                                              glm::vec2(2.f, 2.f), 0.f);
     tank.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));
@@ -141,6 +143,7 @@ void GameManager::_load_level(const u32 level) {
     tank.add_component<component::Health>(100u);
 
     ecs::Entity truck{_registry.create_entity("truck")};
+    truck.add_group("enemies");
     truck.add_component<component::Transform>(glm::vec2(10.f, 10.f),
                                               glm::vec2(1.f, 1.f), 0.f);
     truck.add_component<component::RigidBody>(glm::vec2(0.f, 0.f));

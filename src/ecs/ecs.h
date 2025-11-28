@@ -75,6 +75,14 @@ class Entity {
     bool operator<(const Entity &other) const;
     bool operator>(const Entity &other) const;
 
+    void add_tag(const std::string &tag);
+    bool has_tag(const std::string &tag) const;
+    void remove_tag();
+
+    void add_group(const std::string &group);
+    bool has_group(const std::string &group) const;
+    void remove_from_group();
+
     template <typename TComponent, typename... TArgs>
     void add_component(TArgs &&...args);
 
@@ -178,6 +186,14 @@ class Registry {
     std::set<explore::ecs::Entity> _entities_add_queue;
     std::set<explore::ecs::Entity> _entities_kill_queue;
 
+    // entity tags (one tag name per entity for now)
+    std::unordered_map<std::string, Entity> _entity_per_tag;
+    std::unordered_map<u32, std::string> _tag_per_entity;
+
+    // entity groups (a set of entities per group name)
+    std::unordered_map<std::string, std::set<Entity>> _entities_per_group;
+    std::unordered_map<u32, std::string> _group_per_entity;
+
     std::unordered_map<std::type_index, std::shared_ptr<explore::ecs::System>>
         _systems;
 
@@ -196,6 +212,18 @@ class Registry {
     void remove_entity_from_systems(Entity entity);
 
     void kill_entity(Entity entity);
+
+    // tag management (TODO rethink this)
+    void add_tag(Entity entity, const std::string &tag);
+    bool has_tag(Entity entity, const std::string &tag) const;
+    Entity get_by_tag(const std::string &tag) const;
+    void remove_tag(Entity entity);
+
+    // group management (TODO rethink this)
+    void add_group(Entity entity, const std::string &group);
+    bool has_group(Entity entity, const std::string &group) const;
+    std::vector<Entity> get_by_group(const std::string &group) const;
+    void remove_from_group(Entity entity);
 
     template <typename TComponent, typename... TArgs>
     void add_component(Entity entity, TArgs &&...args);
