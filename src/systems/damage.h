@@ -18,6 +18,10 @@ class Damage : public ecs::System {
     void on_collision(event::Collision &event);
 
     void update();
+
+   private:
+    void projectile_player_hit(ecs::Entity projectile, ecs::Entity player);
+    void projectile_enemy_hit(ecs::Entity projectile, ecs::Entity enemy);
 };
 }  // namespace explore::system
 
