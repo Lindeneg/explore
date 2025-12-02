@@ -75,12 +75,12 @@ class Entity {
     bool operator<(const Entity &other) const;
     bool operator>(const Entity &other) const;
 
-    void add_tag(const std::string_view tag);
-    bool has_tag(const std::string_view tag) const;
+    void add_tag(const std::string &tag);
+    bool has_tag(const std::string &tag) const;
     void remove_tag();
 
-    void add_group(const std::string_view group);
-    bool has_group(const std::string_view group) const;
+    void add_group(const std::string &group);
+    bool has_group(const std::string &group) const;
     void remove_from_group();
 
     template <typename TComponent, typename... TArgs>
@@ -218,15 +218,15 @@ class Registry {
     void kill_entity(Entity entity);
 
     // tag management (TODO rethink this)
-    void add_tag(Entity entity, const std::string_view tag);
-    bool has_tag(Entity entity, const std::string_view tag) const;
-    Entity get_by_tag(const std::string_view tag) const;
+    void add_tag(Entity entity, const std::string &tag);
+    bool has_tag(Entity entity, const std::string &tag) const;
+    Entity get_by_tag(const std::string &tag) const;
     void remove_tag(Entity entity);
 
     // group management (TODO rethink this)
-    void add_group(Entity entity, const std::string_view group);
-    bool has_group(Entity entity, const std::string_view group) const;
-    std::vector<Entity> get_by_group(const std::string_view group) const;
+    void add_group(Entity entity, const std::string &group);
+    bool has_group(Entity entity, const std::string &group) const;
+    std::vector<Entity> get_by_group(const std::string &group) const;
     void remove_from_group(Entity entity);
 
     template <typename TComponent, typename... TArgs>

@@ -20,29 +20,25 @@ void Damage::subscribe_to_events(event::Bus &event_bus) {
 void Damage::on_collision(event::Collision &event) {
     spdlog::trace("collision between '{}:{}' and '{}:{}'", event.a.get_id(),
                   event.a.get_name(), event.b.get_id(), event.b.get_name());
-//    if (event.a.has_group("ASJFSA")) {
-//        //        projectile_player_hit(event.a, event.b);
-//    }
 
-    //    if (event.a.has_group(constants::PROJECTILE_GROUP) &&
-    //        event.b.has_tag(constants::PLAYER_TAG)) {
-    //        //        projectile_player_hit(event.a, event.b);
-    //    }
+    if (event.a.has_group(constants::PROJECTILE_GROUP) &&
+        event.b.has_tag(constants::PLAYER_TAG)) {
+    }
 
-    //    if (event.b.has_group(constants::PROJECTILE_GROUP) &&
-    //        event.a.has_tag(constants::PLAYER_TAG)) {
-    //        projectile_player_hit(event.b, event.a);
-    //    }
-    //
-    //    if (event.a.has_group(constants::PROJECTILE_GROUP) &&
-    //        event.b.has_group(constants::ENEMY_GROUP)) {
-    //        projectile_enemy_hit(event.a, event.b);
-    //    }
-    //
-    //    if (event.b.has_group(constants::PROJECTILE_GROUP) &&
-    //        event.a.has_group(constants::ENEMY_GROUP)) {
-    //        projectile_enemy_hit(event.b, event.a);
-    //    }
+    if (event.b.has_group(constants::PROJECTILE_GROUP) &&
+        event.a.has_tag(constants::PLAYER_TAG)) {
+        projectile_player_hit(event.b, event.a);
+    }
+
+    if (event.a.has_group(constants::PROJECTILE_GROUP) &&
+        event.b.has_group(constants::ENEMY_GROUP)) {
+        projectile_enemy_hit(event.a, event.b);
+    }
+
+    if (event.b.has_group(constants::PROJECTILE_GROUP) &&
+        event.a.has_group(constants::ENEMY_GROUP)) {
+        projectile_enemy_hit(event.b, event.a);
+    }
 }
 
 void Damage::projectile_player_hit(ecs::Entity projectile, ecs::Entity player) {

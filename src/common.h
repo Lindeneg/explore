@@ -4,6 +4,7 @@
 #include <SDL2/SDL_pixels.h>
 
 #include <glm/glm.hpp>
+#include <string>
 #include <string_view>
 
 typedef int8_t i8;
@@ -95,12 +96,15 @@ constexpr f64 FRAME_TARGET{1000.f / FPS};
 /* maximum delta time (useful if running in debugger) */
 constexpr f64 MAXIMUM_DT{0.05f};
 
-constexpr std::string_view PLAYER_TAG{"player"};
-constexpr std::string_view ENEMY_TAG{"enemy"};
+// enum Tags { PLAYER_TAG, ENEMY_TAG };
+//
+// enum Groups { ENEMY_GROUP, TILE_GROUP, PROJECTILE_GROUP };
 
-constexpr std::string_view ENEMY_GROUP{"enemies"};
-constexpr std::string_view TILE_GROUP{"tiles"};
-constexpr std::string_view PROJECTILE_GROUP{"projectiles"};
+const std::string PLAYER_TAG{"player"};
+const std::string ENEMY_TAG{"enemy"};
+const std::string ENEMY_GROUP{"enemies"};
+const std::string TILE_GROUP{"tiles"};
+const std::string PROJECTILE_GROUP{"projectiles"};
 
 }  // namespace explore::constants
 

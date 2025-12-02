@@ -112,6 +112,7 @@ void GameManager::_load_level(const u32 level) {
     chopper.add_component<component::Sprite>("chopper-tex", 1u,
                                              core::rect(0, 0, 32, 32));
     chopper.add_component<component::Animation>(2u, 15u, true);
+    chopper.add_component<component::BoxCollider>(32u, 32u);
 
     chopper.add_component<component::KeyboardControl>(
         glm::vec2(0, -50), glm::vec2(50, 0), glm::vec2(0, 50),
@@ -119,7 +120,7 @@ void GameManager::_load_level(const u32 level) {
     chopper.add_component<component::CameraFollow>();
     chopper.add_component<component::Health>(100u);
     chopper.add_component<component::ProjectileEmitter>(glm::vec2(150.0, 150.0),
-                                                        0u, 10000u, 0u, true);
+                                                        0u, 10000u, 10u, true);
 
     ecs::Entity radar{_registry.create_entity("radar")};
     radar.add_component<component::Transform>(
@@ -139,7 +140,7 @@ void GameManager::_load_level(const u32 level) {
                                           core::rect(0, 0, 32, 32));
     tank.add_component<component::BoxCollider>(32u, 32u);
     tank.add_component<component::ProjectileEmitter>(glm::vec2(100.0, 0.0),
-                                                     5000u, 3000u, 0u, false);
+                                                     5000u, 3000u, 10u, false);
     tank.add_component<component::Health>(100u);
 
     ecs::Entity truck{_registry.create_entity("truck")};
@@ -151,7 +152,7 @@ void GameManager::_load_level(const u32 level) {
                                            core::rect(0, 0, 32, 32));
     truck.add_component<component::BoxCollider>(32u, 32u);
     truck.add_component<component::ProjectileEmitter>(glm::vec2(0, 100.0),
-                                                      2000u, 5000u, 0u, false);
+                                                      2000u, 5000u, 10u, false);
     truck.add_component<component::Health>(100u);
 }
 
