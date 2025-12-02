@@ -54,6 +54,7 @@ void ProjectileEmit::on_key_pressed(event::KeyPressed &event) {
 
                 // create new projectile and add it to world
                 auto projectile{entity.get_registry()->create_entity()};
+                projectile.add_group(constants::PROJECTILE_GROUP);
 
                 projectile.add_component<component::Projectile>(
                     emitter.hit_percent_damage, emitter.duration,
@@ -93,6 +94,7 @@ void ProjectileEmit::update(ecs::Registry &registry) {
             }
 
             auto projectile{registry.create_entity()};
+            projectile.add_group(constants::PROJECTILE_GROUP);
 
             projectile.add_component<component::Projectile>(
                 emitter.hit_percent_damage, emitter.duration, emitter.friendly);

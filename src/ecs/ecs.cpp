@@ -110,12 +110,12 @@ Entity Registry::create_entity(const std::string_view entity_name) {
     return entity;
 }
 
-void Entity::add_tag(const std::string &tag) {
+void Entity::add_tag(const std::string_view tag) {
     ASSERT_RET_V_MSG(_registry, "registry is null");
     _registry->add_tag(*this, tag);
 }
 
-bool Entity::has_tag(const std::string &tag) const {
+bool Entity::has_tag(const std::string_view tag) const {
     ASSERT_RET_MSG(_registry, false, "registry is null");
     return _registry->has_tag(*this, tag);
 }
@@ -125,12 +125,12 @@ void Entity::remove_tag() {
     _registry->remove_tag(*this);
 }
 
-void Entity::add_group(const std::string &group) {
+void Entity::add_group(const std::string_view group) {
     ASSERT_RET_V_MSG(_registry, "registry is null");
     _registry->add_group(*this, group);
 }
 
-bool Entity::has_group(const std::string &group) const {
+bool Entity::has_group(const std::string_view group) const {
     ASSERT_RET_MSG(_registry, false, "registry is null");
     return _registry->has_group(*this, group);
 }
@@ -140,20 +140,20 @@ void Entity::remove_from_group() {
     _registry->remove_from_group(*this);
 }
 
-void Registry::add_tag(Entity entity, const std::string &tag) {
+void Registry::add_tag(Entity entity, const std::string_view tag) {
     _entity_per_tag.emplace(tag, entity);
     _tag_per_entity.emplace(entity.get_id(), tag);
 }
 
-bool Registry::has_tag(Entity entity, const std::string &tag) const {
+bool Registry::has_tag(Entity entity, const std::string_view tag) const {
     if (_tag_per_entity.find(entity.get_id()) == _tag_per_entity.end()) {
         return false;
     }
-    return _entity_per_tag.find(tag)->second == entity;
+    return _entity_per_tag.find(std::string(tag))->second == entity;
 }
 
-Entity Registry::get_by_tag(const std::string &tag) const {
-    return _entity_per_tag.at(tag);
+Entity Registry::get_by_tag(const std::string_view tag) const {
+    return _entity_per_tag.at(std::string(tag));
 }
 
 void Registry::remove_tag(Entity entity) {
@@ -165,19 +165,19 @@ void Registry::remove_tag(Entity entity) {
     }
 }
 
-void Registry::add_group(Entity entity, const std::string &group) {
+void Registry::add_group(Entity entity, const std::string_view group) {
     _entities_per_group.emplace(group, std::set<Entity>());
-    _entities_per_group[group].emplace(entity);
+    _entities_per_group[std::string(group)].emplace(entity);
     _group_per_entity.emplace(entity.get_id(), group);
 }
 
-bool Registry::has_group(Entity entity, const std::string &group) const {
-    auto group_entities{_entities_per_group.at(group)};
+bool Registry::has_group(Entity entity, const std::string_view group) const {
+    auto group_entities{_entities_per_group.at(std::string(group))};
     return group_entities.find(entity) != group_entities.end();
 }
 
-std::vector<Entity> Registry::get_by_group(const std::string &group) const {
-    auto &entities_set{_entities_per_group.at(group)};
+std::vector<Entity> Registry::get_by_group(const std::string_view group) const {
+    auto &entities_set{_entities_per_group.at(std::string(group))};
     return std::vector<Entity>(entities_set.begin(), entities_set.end());
 }
 

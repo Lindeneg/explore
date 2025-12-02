@@ -21,6 +21,12 @@ void Damage::on_collision(event::Collision &event) {
     spdlog::trace("collision between '{}:{}' and '{}:{}'", event.a.get_id(),
                   event.a.get_name(), event.b.get_id(), event.b.get_name());
 
+    if (event.a.has_group("projectiles") && event.b.has_tag("player")) {
+    }
+
+    if (event.b.has_group("projectiles") && event.a.has_tag("player")) {
+    }
+
     //    event.a.kill();
     //    event.b.kill();
 }
