@@ -20,8 +20,8 @@ class Damage : public ecs::System {
     void update();
 
    private:
-    void projectile_player_hit(ecs::Entity projectile, ecs::Entity player);
-    void projectile_enemy_hit(ecs::Entity projectile, ecs::Entity enemy);
+    void projectile_hit(ecs::Entity projectile, ecs::Entity entity,
+                        bool must_be_unfriendly);
 };
 }  // namespace explore::system
 

@@ -23,54 +23,41 @@ void Damage::on_collision(event::Collision &event) {
 
     if (event.a.has_group(constants::PROJECTILE_GROUP) &&
         event.b.has_tag(constants::PLAYER_TAG)) {
+        projectile_hit(event.a, event.b, true);
     }
 
     if (event.b.has_group(constants::PROJECTILE_GROUP) &&
         event.a.has_tag(constants::PLAYER_TAG)) {
-        projectile_player_hit(event.b, event.a);
+        projectile_hit(event.b, event.a, true);
     }
 
     if (event.a.has_group(constants::PROJECTILE_GROUP) &&
         event.b.has_group(constants::ENEMY_GROUP)) {
-        projectile_enemy_hit(event.a, event.b);
+        projectile_hit(event.a, event.b, false);
     }
 
     if (event.b.has_group(constants::PROJECTILE_GROUP) &&
         event.a.has_group(constants::ENEMY_GROUP)) {
-        projectile_enemy_hit(event.b, event.a);
+        projectile_hit(event.b, event.a, false);
     }
 }
 
-void Damage::projectile_player_hit(ecs::Entity projectile, ecs::Entity player) {
+void Damage::projectile_hit(ecs::Entity projectile, ecs::Entity entity,
+                            bool must_be_unfriendly) {
     const auto &proj{projectile.get_component<component::Projectile>()};
 
-    if (proj.friendly) return;
+    if (must_be_unfriendly && proj.friendly) return;
+    if (!must_be_unfriendly && !proj.friendly) return;
 
-    auto &player_health{player.get_component<component::Health>()};
+    auto &health{entity.get_component<component::Health>()};
 
-    player_health.hp_percent -= proj.hit_percent_damage;
+    health.hp_percent -= proj.hit_percent_damage;
 
-    if (player_health.hp_percent <= 0) {
-        player.kill();
+    if (health.hp_percent <= 0) {
+        entity.kill();
     }
 
     projectile.kill();
 }
-
-void Damage::projectile_enemy_hit(ecs::Entity projectile, ecs::Entity enemy) {
-    const auto &proj{projectile.get_component<component::Projectile>()};
-    if (!proj.friendly) return;
-
-    auto &enemy_health{enemy.get_component<component::Health>()};
-
-    enemy_health.hp_percent -= proj.hit_percent_damage;
-
-    if (enemy_health.hp_percent <= 0) {
-        enemy.kill();
-    }
-
-    projectile.kill();
-}
-
 void Damage::update() {}
 }  // namespace explore::system
