@@ -52,13 +52,15 @@ void GameManager::run() {
         _process_input();
         _update();
         _render();
-        //        spdlog::debug("FPS:{}", game_context.FPS());
+        if (_game_context.sample_fps) {
+            spdlog::info("FPS: {}", _game_context.FPS());
+        }
     }
 }
 
 void GameManager::_setup() {
     _game_context.capped_frame_rate = true;
-    _game_context.sample_fps = true;
+    _game_context.sample_fps = false;
     _game_context.draw_collision_rects = true;
 
     _registry.add_system<system::Movement>();
@@ -181,6 +183,8 @@ void GameManager::_process_input() {
 void GameManager::_update() {
     _game_context.update_delta_time();
 
+    // TODO: rethink this reset stuff, introduce
+    // maybe both "on", "off" and "once" listeners
     _event_bus.reset();
 
     _registry.get_system<system::Damage>().subscribe_to_events(_event_bus);
