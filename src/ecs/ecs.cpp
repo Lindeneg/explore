@@ -77,11 +77,18 @@ void Registry::update() {
     _entities_add_queue.clear();
 
     for (auto entity : _entities_kill_queue) {
-        // TODO also remove entity from groups and tags
         const u32 id{entity.get_id()};
         remove_entity_from_systems(entity);
-        _free_ids.push_back(id);
         _entity_comp_signatures[id].reset();
+
+        for (auto pool : _comp_pools) {
+            pool->remove_entity_from_pool(id);
+        }
+
+        _free_ids.push_back(id);
+
+        remove_from_group(entity);
+        remove_tag(entity);
     }
     _entities_kill_queue.clear();
 }

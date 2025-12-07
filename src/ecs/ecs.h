@@ -135,32 +135,86 @@ void System::require_component() {
 
 class IPool {
    public:
-    virtual ~IPool() {}
+    virtual ~IPool() = default;
+    virtual void remove_entity_from_pool(u32 entity_id) = 0;
 };
 
 template <typename T>
 class Pool : public IPool {
    private:
     std::vector<T> _data;
+    u32 _size;
+
+    std::unordered_map<u32, u32> _entity_id_to_index;
+    std::unordered_map<u32, u32> _index_to_entity_id;
 
    public:
-    Pool(u32 size = 100) { _data.resize(size); }
+    Pool(u32 capacity = 100u) {
+        _size = 0u;
+        _data.resize(capacity);
+    }
 
     virtual ~Pool() = default;
 
-    bool empty() const { return _data.empty(); }
+    bool empty() const { return _size == 0u; }
 
-    u32 size() const { return _data.size(); }
+    u32 size() const { return _size; }
 
     void resize(u32 n) { _data.resize(n); }
 
-    void clear() { _data.clear(); }
+    void clear() {
+        _data.clear();
+        _entity_id_to_index.clear();
+        _index_to_entity_id.clear();
+        _size = 0;
+    }
 
-    void add(T object) { _data.push_back(object); }
+    //    void add(T object) { _data.push_back(object); }
 
-    void set(u32 index, T object) { _data[index] = object; }
+    void set(u32 entity_id, T object) {
+        if (_entity_id_to_index.find(entity_id) != _entity_id_to_index.end()) {
+            u32 index{_entity_id_to_index[entity_id]};
+            _data[index] = object;
+            return;
+        }
 
-    T &get(u32 index) { return _data[index]; }
+        u32 index{_size};
+        _entity_id_to_index.emplace(entity_id, index);
+        _index_to_entity_id.emplace(index, entity_id);
+        if (index >= _data.capacity()) {
+            _data.resize(_size * 2);
+        }
+        _data[index] = object;
+        _size++;
+    }
+
+    void remove(u32 entity_id) {
+        // copy last element to deleted position
+        u32 index_of_removed{_entity_id_to_index[entity_id]};
+        u32 index_of_last{_size - 1};
+        _data[index_of_removed] = _data[index_of_last];
+
+        // update index entity maps
+        u32 entity_id_of_last_element{_index_to_entity_id[index_of_last]};
+        _entity_id_to_index[entity_id_of_last_element] = index_of_removed;
+        _index_to_entity_id[index_of_removed] = entity_id_of_last_element;
+
+        _entity_id_to_index.erase(entity_id);
+        _index_to_entity_id.erase(index_of_last);
+
+        _size--;
+    }
+
+    void remove_entity_from_pool(u32 entity_id) override {
+        if (_entity_id_to_index.find(entity_id) != _entity_id_to_index.end()) {
+            remove(entity_id);
+        }
+    }
+
+    T &get(u32 entity_id) {
+        u32 index{_entity_id_to_index[entity_id]};
+        return _data[index];
+    }
 
     T &operator[](u32 index) { return _data[index]; }
 };
@@ -272,16 +326,12 @@ void Registry::add_component(Entity entity, TArgs &&...args) {
     std::shared_ptr<Pool<TComponent>> comp_pool{
         std::static_pointer_cast<Pool<TComponent>>(_comp_pools[component_id])};
 
-    if (entity_id >= comp_pool->size()) {
-        comp_pool->resize(_entity_count);
-    }
-
     TComponent component{std::forward<TArgs>(args)...};
 
     comp_pool->set(entity_id, component);
     _entity_comp_signatures[entity_id].set(component_id, true);
 
-    spdlog::trace("added component '{}:{}' to entity '{}:{}'", component_id,
+    spdlog::debug("added component '{}:{}' to entity '{}:{}'", component_id,
                   typeid(TComponent).name(), entity_id, entity.get_name());
 }
 
@@ -289,6 +339,10 @@ template <typename TComponent>
 void Registry::remove_component(Entity entity) {
     const auto component_id{Component<TComponent>::get_id()};
     const auto entity_id{entity.get_id()};
+
+    std::shared_ptr<Pool<TComponent>> comp_pool{
+        std::static_pointer_cast<Pool<TComponent>>(_comp_pools[component_id])};
+    comp_pool->remove(entity_id);
 
     _entity_comp_signatures[entity_id].set(component_id, false);
 
