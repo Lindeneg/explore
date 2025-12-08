@@ -82,7 +82,7 @@ void Registry::update() {
         _entity_comp_signatures[id].reset();
 
         for (auto pool : _comp_pools) {
-            pool->remove_entity_from_pool(id);
+            if (pool) pool->remove_entity_from_pool(id);
         }
 
         _free_ids.push_back(id);
