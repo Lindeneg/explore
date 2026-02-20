@@ -11,5 +11,6 @@
         "sol2",
         "imgui",
         "spdlog"
-    ]
+    ],
+    "builtin-baseline": "dd930e314f529c86d2703a60d5ea7dd6573d9e5a"
 }
