@@ -4,5 +4,6 @@
 out
 vcpkg_installed
 cmake-build-*
+build*
 misc
 compile_commands.json
